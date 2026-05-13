@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chandrasekhar Jinendran — Systems & Controls Engineer specializing in Model-Based Development, MATLAB/Simulink, and safety-critical embedded systems.">
+<title>Chandrasekhar Jinendran — Systems & Controls Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0a0d;
+    --bg-soft:   #131319;
+    --bg-lift:   #1a1a22;
+    --border:    #26262f;
+    --border-hi: #3a3a45;
+    --text:      #ece9e2;
+    --text-dim:  #7c7c86;
+    --text-mid:  #a8a8b0;
+    --accent:    #c8ff45;
+    --accent-d:  rgba(200,255,69,0.12);
+    --accent-b:  rgba(200,255,69,0.35);
+
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Sora', system-ui, sans-serif;
+    --serif: 'Instrument Serif', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.55;
+    font-size: 16px;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(200,255,69,0.04), transparent 60%),
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 100% 100%, 48px 48px, 48px 48px;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* Layout */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* Top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
+    background: rgba(10,10,13,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 32px; max-width: 1180px; margin: 0 auto;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .brand { color: var(--text); }
+  .brand .dot { color: var(--accent); }
+  .status {
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .status::before {
+    content: ''; width: 6px; height: 6px; background: var(--accent);
+    border-radius: 50%; display: inline-block;
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Section scaffolding */
+  section { padding: 96px 0; position: relative; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: ''; width: 24px; height: 1px; background: var(--accent);
+  }
+  .section-num { color: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 140px 0 120px; }
+  .hero-meta {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    letter-spacing: 0.1em; margin-bottom: 28px;
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 8px; }
+  .hero-meta .marker { color: var(--accent); }
+
+  .hero h1 {
+    font-family: var(--sans);
+    font-size: clamp(40px, 7vw, 92px);
+    line-height: 0.98;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .hero h1 .accent {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    font-size: clamp(17px, 1.6vw, 21px);
+    color: var(--text-mid);
+    max-width: 640px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono); font-size: 13px;
+    padding: 14px 22px;
+    border: 1px solid var(--border-hi);
+    color: var(--text);
+    transition: all 0.2s ease;
+    letter-spacing: 0.04em;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary {
+    background: var(--accent); color: var(--bg); border-color: var(--accent);
+    font-weight: 500;
+  }
+  .btn.primary:hover { background: transparent; color: var(--accent); }
+  .btn .arr { transition: transform 0.2s ease; }
+  .btn:hover .arr { transform: translateX(3px); }
+
+  /* About */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px;
+    align-items: start;
+  }
+  .about-head {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.15;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .about-body { color: var(--text-mid); font-size: 16px; }
+  .about-body p { margin-bottom: 18px; }
+  .about-body strong { color: var(--text); font-weight: 500; }
+
+  /* Experience timeline */
+  .timeline { display: flex; flex-direction: column; }
+  .role {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 48px; padding: 32px 0;
+    border-top: 1px solid var(--border);
+    transition: background 0.25s ease;
+  }
+  .role:hover { background: linear-gradient(90deg, var(--accent-d), transparent 60%); }
+  .role:last-child { border-bottom: 1px solid var(--border); }
+  .role-date {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    letter-spacing: 0.06em; padding-top: 6px;
+  }
+  .role-title {
+    font-size: 22px; font-weight: 500; color: var(--text);
+    margin-bottom: 4px; letter-spacing: -0.01em;
+  }
+  .role-org {
+    font-family: var(--mono); font-size: 13px; color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .role-org .loc { color: var(--text-dim); margin-left: 12px; }
+  .role-points { list-style: none; }
+  .role-points li {
+    color: var(--text-mid); font-size: 15px;
+    padding: 4px 0 4px 18px;
+    position: relative;
+  }
+  .role-points li::before {
+    content: '›'; position: absolute; left: 0; color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  /* Projects */
+  .projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .project {
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: all 0.25s ease;
+    background: var(--bg-soft);
+    position: relative;
+    display: flex; flex-direction: column;
+    min-height: 280px;
+  }
+  .project:hover {
+    border-color: var(--accent-b);
+    transform: translateY(-2px);
+  }
+  .project-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .project-tag {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid var(--border-hi);
+    color: var(--text-dim);
+  }
+  .project-tag.live { color: var(--accent); border-color: var(--accent-b); }
+  .project-tag.planned { color: var(--text-dim); }
+  .project-num {
+    font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .project h3 {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.01em;
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .project-desc {
+    color: var(--text-mid); font-size: 14px;
+    line-height: 1.55; margin-bottom: auto; padding-bottom: 18px;
+  }
+  .project-stack {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding-top: 18px; border-top: 1px dashed var(--border);
+  }
+  .stack-pill {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.06em;
+  }
+  .stack-pill::after { content: ' /'; color: var(--border-hi); }
+  .stack-pill:last-child::after { content: ''; }
+
+  /* Capabilities */
+  .caps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .cap-group {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .cap-head {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--accent); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .cap-list { list-style: none; }
+  .cap-list li {
+    color: var(--text-mid); font-size: 14px;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+  }
+  .cap-list li:hover { color: var(--text); }
+
+  /* Education */
+  .edu-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  .edu-card {
+    border: 1px solid var(--border);
+    padding: 28px;
+    background: var(--bg-soft);
+  }
+  .edu-deg {
+    font-size: 18px; font-weight: 500; color: var(--text);
+    margin-bottom: 6px; letter-spacing: -0.005em;
+  }
+  .edu-inst {
+    font-family: var(--mono); font-size: 13px; color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .edu-meta {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+  }
+
+  .certs {
+    margin-top: 40px;
+  }
+  .certs-list {
+    list-style: none;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+    margin-top: 12px;
+  }
+  .certs-list li {
+    color: var(--text-mid); font-size: 14px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .certs-list li::before {
+    content: '◆'; color: var(--accent); font-size: 9px;
+  }
+
+  /* Contact */
+  .contact { padding: 120px 0 80px; text-align: left; }
+  .contact h2 {
+    font-family: var(--sans);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 600; letter-spacing: -0.03em;
+    line-height: 1; margin-bottom: 28px;
+  }
+  .contact h2 .it {
+    font-family: var(--serif); font-style: italic;
+    color: var(--accent); font-weight: 400;
+  }
+  .contact-sub {
+    color: var(--text-mid); font-size: 18px;
+    max-width: 540px; margin-bottom: 40px;
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .contact-cell {
+    background: var(--bg);
+    padding: 28px;
+    transition: background 0.2s ease;
+  }
+  .contact-cell:hover { background: var(--bg-soft); }
+  .contact-label {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text-dim); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .contact-val {
+    font-size: 17px; color: var(--text); letter-spacing: -0.005em;
+    word-break: break-all;
+  }
+  .contact-cell:hover .contact-val { color: var(--accent); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text-dim); letter-spacing: 0.06em;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    max-width: 1180px; margin: 0 auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .wrap { padding: 0 20px; }
+    .topbar-inner { padding: 14px 20px; }
+    section { padding: 64px 0; }
+    .hero { padding: 80px 0 60px; }
+    .about-grid { grid-template-columns: 1fr; gap: 28px; }
+    .role { grid-template-columns: 1fr; gap: 12px; }
+    .projects { grid-template-columns: 1fr; }
+    .caps { grid-template-columns: repeat(2, 1fr); }
+    .edu-grid { grid-template-columns: 1fr; }
+    .certs-list { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  /* subtle entry animation */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">CJ<span class="dot">.</span></div>
+    <div class="status">SYSTEM ONLINE · BENGALURU 12.97°N</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">
+      <span><span class="marker">▸</span> v2026.05</span>
+      <span><span class="marker">▸</span> Bengaluru, IN</span>
+      <span><span class="marker">▸</span> Open to roles</span>
+    </div>
+    <h1>Systems &amp; controls engineer<br>building <span class="accent">safety-critical</span> embedded software.</h1>
+    <p class="hero-sub">5+ years in Model-Based Development with MATLAB/Simulink — designing, validating, and shipping control software for automotive and home-comfort systems under ISO 26262. Currently pivoting toward aerospace flight-control and avionics.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:chandrasekharjinendran@gmail.com">
+        Get in touch <span class="arr">→</span>
+      </a>
+      <a class="btn" href="https://linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener">
+        LinkedIn <span class="arr">↗</span>
+      </a>
+      <a class="btn" href="#projects">View work <span class="arr">↓</span></a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label"><span class="section-num">01</span> / About</div>
+    <div class="about-grid">
+      <div class="about-head">A model-based engineer with a bias for shipping certifiable, real-world software.</div>
+      <div class="about-body">
+        <p>I'm <strong>Chandrasekhar Jinendran</strong>, a software developer currently at <strong>Bosch Global Software</strong> working on hydraulic-circuit controllers — feasibility studies, system architecture, prototype modeling, and HIL validation on STM32 hardware.</p>
+        <p>My background sits at the intersection of <strong>controls, embedded systems, and functional safety</strong>: requirement implementation through cascade/master/release branches, AUTOSAR integration, variant coding with EEPROM bit/byte configuration for FOTA, and end-to-end ownership through reviews, planning, and delivery.</p>
+        <p>I'm now extending this foundation into <strong>aerospace flight-control systems</strong> — translating ISO 26262 muscle into DO-178C / ARP4754A workflows and shipping aerospace-relevant side work in public.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-label"><span class="section-num">02</span> / Experience</div>
+    <div class="timeline">
+
+      <div class="role">
+        <div class="role-date">2022 — Present</div>
+        <div>
+          <div class="role-title">Software Developer</div>
+          <div class="role-org">Bosch Global Software <span class="loc">Bengaluru, IN</span></div>
+          <ul class="role-points">
+            <li>Concept design, feasibility, and architecture for hydraulic-circuit controllers — early-phase prototype modeling through delivery.</li>
+            <li>Requirement implementation across cascade, master, and release branches with full ownership of reviews and planning.</li>
+            <li>Bug analysis on high-fidelity Hardware-in-the-Loop test benches using STM32 ST-LINK flashing.</li>
+            <li>Variant coding via bit/byte-level EEPROM configuration for FOTA and non-FOTA branches.</li>
+            <li>Cross-functional AUTOSAR integration and system validation with global teams.</li>
+            <li>Beta-stage evaluator for MATLAB / Simulink Copilot — direct user-feedback channel to MathWorks.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">2021 — 2022</div>
+        <div>
+          <div class="role-title">Software Developer</div>
+          <div class="role-org">L&amp;T Technology Services <span class="loc">Bengaluru, IN</span></div>
+          <ul class="role-points">
+            <li>Built an ADAS test environment for autonomous parking by integrating Unreal Engine — significantly reduced simulation cost.</li>
+            <li>Developed and tested a communication adapter bridging a French OEM and supplier codebase.</li>
+            <li>Authored DFMEA (AIAG 2019) for an in-wheel-motor pickup truck for a North American OEM.</li>
+            <li>Coupled safety &amp; security activities in compliance with ISO 26262.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">2021</div>
+        <div>
+          <div class="role-title">Software Intern</div>
+          <div class="role-org">L&amp;T Technology Services <span class="loc">Vadodara, IN</span></div>
+          <ul class="role-points">
+            <li>Designed and tested an Electronic Stability Control–enabled powertrain for a Japanese OEM under FMVSS No. 126.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">2018 — 2019</div>
+        <div>
+          <div class="role-title">Graduate Engineering Trainee</div>
+          <div class="role-org">Bonfiglioli Transmissions <span class="loc">Chennai, IN</span></div>
+          <ul class="role-points">
+            <li>Designed an electric-motor control system and supported testing of electro-mechanical assemblies.</li>
+            <li>Collaborated with vendors and cross-functional teams on system integration.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label"><span class="section-num">03</span> / Selected work</div>
+
+    <div class="projects">
+
+      <!-- AEROSPACE TARGET PROJECTS -->
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag planned">In progress</span>
+          <span class="project-num">P/01</span>
+        </div>
+        <h3>Quadrotor flight controller</h3>
+        <p class="project-desc">Cascaded attitude / position control in Simulink, code-generated onto Pixhawk hardware. Inner-loop PID and outer-loop trajectory tracking, validated in SITL and on physical airframe.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Simulink</span>
+          <span class="stack-pill">Embedded Coder</span>
+          <span class="stack-pill">PX4</span>
+          <span class="stack-pill">C++</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag planned">Planned</span>
+          <span class="project-num">P/02</span>
+        </div>
+        <h3>Triplex-redundant fly-by-wire architecture</h3>
+        <p class="project-desc">Voter-based FBW model with fault detection, isolation &amp; reconfiguration. ARP4754A-style requirements traceability, failure-mode coverage, and reconfiguration logic in Stateflow.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Simulink</span>
+          <span class="stack-pill">Stateflow</span>
+          <span class="stack-pill">ARP4754A</span>
+          <span class="stack-pill">DOORS</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag planned">Planned</span>
+          <span class="project-num">P/03</span>
+        </div>
+        <h3>Autopilot mode logic in Stateflow</h3>
+        <p class="project-desc">Hierarchical state machine for heading hold, altitude capture, VNAV / LNAV and glideslope capture, with explicit mode-transition guards and pilot-override handling.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Stateflow</span>
+          <span class="stack-pill">Simulink Test</span>
+          <span class="stack-pill">MATLAB</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag planned">Planned</span>
+          <span class="project-num">P/04</span>
+        </div>
+        <h3>DO-178C verification pipeline</h3>
+        <p class="project-desc">End-to-end DAL-A demo: requirements in Simulink Requirements Manager, MC/DC coverage with Simulink Coverage, Polyspace static analysis, and generated certification artifacts.</p>
+        <div class="project-stack">
+          <span class="stack-pill">DO-178C</span>
+          <span class="stack-pill">Polyspace</span>
+          <span class="stack-pill">Simulink Coverage</span>
+        </div>
+      </div>
+
+      <!-- ACADEMIC PROJECTS -->
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag live">Published</span>
+          <span class="project-num">P/05</span>
+        </div>
+        <h3>Rotational galloping of rigid rectangular bodies</h3>
+        <p class="project-desc">Numerical study of how corner radius influences rotational galloping instability — implemented and parallelized in C++ on Linux.</p>
+        <div class="project-stack">
+          <span class="stack-pill">C++</span>
+          <span class="stack-pill">Linux</span>
+          <span class="stack-pill">Numerical methods</span>
+        </div>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <span class="project-tag live">Published</span>
+          <span class="project-num">P/06</span>
+        </div>
+        <h3>Modular in-pipe inspection robot</h3>
+        <p class="project-desc">Computer-vision-guided in-pipe robot for inspection and cleaning. Sensor integration, motion control, and Simulink-based path logic.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Simulink</span>
+          <span class="stack-pill">Computer Vision</span>
+          <span class="stack-pill">MATLAB</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="section-label"><span class="section-num">04</span> / Capabilities</div>
+    <div class="caps">
+
+      <div class="cap-group">
+        <div class="cap-head">Systems &amp; Safety</div>
+        <ul class="cap-list">
+          <li>MBSE</li>
+          <li>Requirement Analysis</li>
+          <li>FMEA / DFMEA / FTA</li>
+          <li>ISO 26262</li>
+          <li>Stakeholder Management</li>
+          <li>DOORS</li>
+        </ul>
+      </div>
+
+      <div class="cap-group">
+        <div class="cap-head">Modeling &amp; Tools</div>
+        <ul class="cap-list">
+          <li>MATLAB</li>
+          <li>Simulink</li>
+          <li>System Composer</li>
+          <li>SysML</li>
+          <li>Stateflow</li>
+          <li>Requirements Manager</li>
+        </ul>
+      </div>
+
+      <div class="cap-group">
+        <div class="cap-head">Software</div>
+        <ul class="cap-list">
+          <li>C++</li>
+          <li>Python</li>
+          <li>Git</li>
+          <li>Jenkins</li>
+          <li>Linux</li>
+          <li>AUTOSAR</li>
+        </ul>
+      </div>
+
+      <div class="cap-group">
+        <div class="cap-head">Process</div>
+        <ul class="cap-list">
+          <li>V-Cycle</li>
+          <li>Agile / Scrum</li>
+          <li>SAFe Framework</li>
+          <li>JIRA &amp; Miro</li>
+          <li>HIL Validation</li>
+          <li>AI Pair Programming</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-label"><span class="section-num">05</span> / Education &amp; Certifications</div>
+
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-deg">M.E. in Design Engineering</div>
+        <div class="edu-inst">BITS Pilani</div>
+        <div class="edu-meta">2021</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-deg">B.E. in Mechanical Engineering</div>
+        <div class="edu-inst">Rajiv Gandhi Institute of Technology, Kottayam</div>
+        <div class="edu-meta">2017</div>
+      </div>
+    </div>
+
+    <div class="certs">
+      <div class="cap-head" style="color: var(--accent); margin-top: 40px;">Certifications</div>
+      <ul class="certs-list">
+        <li>Control System Design — MATLAB &amp; Simulink</li>
+        <li>Core MATLAB Skills</li>
+        <li>Agile Scrum Product Owner</li>
+        <li>Functional Safety &amp; ISO 26262</li>
+        <li>Model-Based Development for Automotive — Simulink</li>
+        <li>C++ Essential Training</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-label"><span class="section-num">06</span> / Contact</div>
+    <h2>Let's build something <span class="it">certifiable</span>.</h2>
+    <p class="contact-sub">Open to senior systems &amp; controls roles in aerospace, automotive, and adjacent safety-critical domains. Reach out — I read every message.</p>
+
+    <div class="contact-grid">
+      <a class="contact-cell" href="mailto:chandrasekharjinendran@gmail.com">
+        <div class="contact-label">▸ Email</div>
+        <div class="contact-val">chandrasekharjinendran@gmail.com</div>
+      </a>
+      <a class="contact-cell" href="tel:+917907828837">
+        <div class="contact-label">▸ Phone</div>
+        <div class="contact-val">+91 79078 28837</div>
+      </a>
+      <a class="contact-cell" href="https://linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener">
+        <div class="contact-label">▸ LinkedIn</div>
+        <div class="contact-val">/in/chandrasekhar-jinendran</div>
+      </a>
+      <div class="contact-cell">
+        <div class="contact-label">▸ Location</div>
+        <div class="contact-val">Bengaluru, Karnataka, IN</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>© 2026 CHANDRASEKHAR JINENDRAN</div>
+  <div>BUILT WITH HTML, CSS · HOSTED ON GITHUB PAGES</div>
+  <div>LAST UPDATED · 2026.05</div>
+</footer>
+
+<script>
+  // Subtle reveal-on-scroll
+  const reveal = (el) => el.classList.add('in');
+  const targets = document.querySelectorAll('section');
+  targets.forEach(t => t.classList.add('reveal'));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  targets.forEach(t => io.observe(t));
+  // Hero shows immediately
+  document.querySelector('.hero').classList.add('in');
+</script>
+
+</body>
+</html>
