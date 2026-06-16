@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Pipeline — 16:9</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./fonts.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #E8ECE4; }
+    #ap-root { position: fixed; inset: 0; }
+    @keyframes apBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+    @keyframes apSpin  { to { transform: rotate(360deg); } }
+    @keyframes apPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.62); opacity: 0.55; } }
+  </style>
+</helmet>
+<div id="ap-root">
+  <x-import component="Root169" from="./AgentPipeline.jsx" hint-size="100%,100%"></x-import>
+</div>
+</x-dc>
+</body>
+</html>
