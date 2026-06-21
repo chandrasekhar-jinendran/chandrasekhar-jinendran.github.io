@@ -19,6 +19,129 @@
   <meta name="twitter:title" content="Chandrasekhar Jinendran — AI Specialist">
   <meta name="twitter:description" content="AI Specialist building autonomous agents, automations, and voice AI that ship as real products.">
   <meta name="twitter:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+
+  <!-- ============================================================
+       Structured data (schema.org JSON-LD)
+       Real values pulled from the site content. Lives in the served
+       <head> so crawlers/LLMs read it without executing JS.
+       NOTE: sameAs lists LinkedIn + GitHub only. TODO: add X/Twitter
+       URL here if/when one exists.
+       ============================================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://chandrasekharjinendran.com/#person",
+        "name": "Chandrasekhar Jinendran",
+        "jobTitle": "AI Specialist",
+        "url": "https://chandrasekharjinendran.com/",
+        "image": "https://chandrasekharjinendran.com/assets/og-image.jpg",
+        "email": "mailto:chandrasekharjinendran@gmail.com",
+        "description": "AI Specialist who designs and ships practical AI systems — autonomous agents, workflow automations, voice bots, and custom AI assistants — taking ideas from concept to deployed product.",
+        "sameAs": [
+          "https://www.linkedin.com/in/chandrasekhar-jinendran",
+          "https://github.com/chandrasekhar-jinendran"
+        ],
+        "knowsAbout": [
+          "AI agents",
+          "Workflow automation",
+          "Voice AI",
+          "Model Context Protocol",
+          "n8n",
+          "Claude Code",
+          "Prompt engineering",
+          "Generative AI",
+          "Local LLM deployment"
+        ],
+        "hasCredential": {
+          "@type": "EducationalOccupationalCredential",
+          "name": "Outskill AI Certification",
+          "credentialCategory": "certificate",
+          "recognizedBy": {
+            "@type": "Organization",
+            "name": "Outskill"
+          }
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://chandrasekharjinendran.com/#website",
+        "url": "https://chandrasekharjinendran.com/",
+        "name": "Chandrasekhar Jinendran — AI Specialist",
+        "description": "Portfolio of Chandrasekhar Jinendran, an AI Specialist building autonomous agents, workflow automations, and voice AI that ship as real products.",
+        "inLanguage": "en",
+        "author": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "publisher": { "@id": "https://chandrasekharjinendran.com/#person" }
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Ledger MCP",
+        "genre": "MCP Server",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["Python", "FastMCP", "SQLite", "Policy Layer"],
+        "description": "A Model Context Protocol server (Python · FastMCP · SQLite) exposing 7 governed expense-tracking tools to Claude behind a policy layer — per-transaction and monthly caps, a category allowlist, an emergency-stop freeze, and a full audit trail of every allowed and denied write. 7 offline tests green."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "JobSignal",
+        "genre": "RAG App",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["FastAPI", "RAG", "Vector Search", "Claude API"],
+        "description": "A RAG web app (FastAPI + vector search + Claude API) that ingests job postings and answers cross-posting skill queries with cited sources. Deployed live, indexing a growing set of postings."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Personal AI Clone",
+        "genre": "AI Clone",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["AI Video", "Voice Cloning", "Image Gen", "GenAI"],
+        "description": "A digital clone of a real person, combining AI-generated video, voice, and image into one convincing, interactive persona."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Lead Management Automation",
+        "genre": "Automation",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["n8n", "Agents", "Webhooks", "Automation"],
+        "description": "An end-to-end website lead-capture and management system built with n8n agents — capturing, qualifying, and routing leads automatically."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "AI Employee",
+        "genre": "Agent",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["Agentic AI", "Autonomy", "MCP", "Automation"],
+        "description": "An agentic AI that autonomously handles repetitive tasks end to end — an always-on teammate that does the busywork."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Custom MCP Servers & Micro-Apps",
+        "genre": "MCP",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["MCP", "Claude", "Micro-Apps", "Live Data"],
+        "description": "MCP servers and micro-apps built inside Claude that fetch and act on live data — extending the assistant with real, custom capabilities."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Real-Time Voice Bot",
+        "genre": "Voice AI",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["Retell AI", "Voice", "Prompting", "Real-Time"],
+        "description": "A human-like conversational voice agent built on Retell AI, shaped with system and meta prompting for natural, real-time dialogue."
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "AI Productivity Assistant",
+        "genre": "Assistant",
+        "creator": { "@id": "https://chandrasekharjinendran.com/#person" },
+        "keywords": ["Assistant", "Full Stack", "Claude", "MCP"],
+        "description": "A personal AI assistant built from scratch, combining the full toolchain — agents, MCP, automation, and voice — into one working product."
+      }
+    ]
+  }
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #faf9f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -39,6 +162,156 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#15452A"></rect><text x="50" y="50" dy="0.35em" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="34" letter-spacing="-2" fill="#ffffff">CJ<tspan fill="#2F9655">.</tspan></text></svg>
 </div>
   <div id="__bundler_loading">Unpacking...</div>
+
+  <!-- ============================================================
+       STATIC, CRAWLABLE CONTENT  (SEO + LLM crawlers)
+       ------------------------------------------------------------
+       The interactive site is a client-side React bundle that
+       replaces the WHOLE document on load (see the bundler script
+       below: document.documentElement.replaceWith(...)). Crawlers
+       that don't execute JS would otherwise see only the "Unpacking"
+       overlay. This <main> mirrors the real page content as plain
+       semantic HTML so search engines and AI crawlers (GPTBot,
+       ClaudeBot, PerplexityBot, Google-Extended, etc.) can read it.
+
+       In a JS browser this block sits behind the opaque, full-screen
+       #__bundler_thumbnail overlay (z-index:9999) and is then
+       discarded when the React app mounts — so it has ZERO effect on
+       the visual design, animations, or dark-mode toggle. Content
+       here is kept in sync with renderVals() in the template below.
+       ============================================================ -->
+  <main id="__seo_static" style="max-width:880px;margin:0 auto;padding:48px 24px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;color:#16201a;">
+    <header>
+      <h1>Chandrasekhar Jinendran — AI Specialist</h1>
+      <p><strong>I build agents, automations &amp; voice AI that do real work.</strong></p>
+      <p>I design and ship practical AI systems — autonomous agents, workflow automations, voice bots, and custom assistants — taking ideas from concept to deployed product. Fast, hands-on, outcome-first.</p>
+    </header>
+
+    <section id="about">
+      <h2>About</h2>
+      <p>I'm Chandrasekhar Jinendran, an AI Specialist who designs and ships practical AI systems — autonomous agents, automations, voice bots, and custom AI assistants — taking ideas from concept to a deployed product.</p>
+      <p>I specialize in applied Generative AI: building AI agents, workflow automations, and human-like voice assistants that replace repetitive work and ship as real products. I work hands-on across the modern AI stack — prompt engineering, agentic AI, Model Context Protocol (MCP), local LLM deployment, and agentic coding with Claude Code.</p>
+      <p>My focus is speed and outcomes — going from idea to a working, deployed AI MVP. If you need AI that does real work instead of a proof of concept, that's what I build.</p>
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <article>
+        <h3>AI Agents &amp; Automations</h3>
+        <p>Systems that do real work — autonomous.</p>
+        <ul>
+          <li>Build custom AI agents and automations that replace repetitive, manual work.</li>
+          <li>Design "AI employees" — agentic systems that autonomously handle tasks end to end.</li>
+          <li>Work across the modern stack: agentic AI, MCP, and agentic coding with Claude Code.</li>
+        </ul>
+      </article>
+      <article>
+        <h3>AI Voice Assistants</h3>
+        <p>Human-like, real-time conversation.</p>
+        <ul>
+          <li>Deploy real-time, human-like conversational voice agents on Retell AI.</li>
+          <li>Tune behaviour with system and meta prompting for natural, reliable dialogue.</li>
+          <li>Wire voice bots into your workflows through webhooks and APIs.</li>
+        </ul>
+      </article>
+      <article>
+        <h3>AI MVPs &amp; Integration</h3>
+        <p>From concept to deployed product.</p>
+        <ul>
+          <li>Develop AI MVPs from idea to a working, deployed product — fast.</li>
+          <li>Automate business workflows with n8n agents and integrations.</li>
+          <li>Integrate AI into existing systems through MCP servers and APIs.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section id="work">
+      <h2>Selected Work</h2>
+      <article>
+        <h3>Ledger MCP <span>(MCP Server)</span></h3>
+        <p>A Model Context Protocol server (Python · FastMCP · SQLite) exposing 7 governed expense-tracking tools to Claude behind a policy layer — per-transaction and monthly caps, a category allowlist, an emergency-stop freeze, and a full audit trail of every allowed and denied write. 7 offline tests green.</p>
+        <p>Tech: Python, FastMCP, SQLite, Policy Layer.</p>
+      </article>
+      <article>
+        <h3>JobSignal <span>(RAG App)</span></h3>
+        <p>A RAG web app (FastAPI + vector search + Claude API) that ingests job postings and answers cross-posting skill queries with cited sources. Deployed live, indexing a growing set of postings.</p>
+        <p>Tech: FastAPI, RAG, Vector Search, Claude API.</p>
+      </article>
+      <article>
+        <h3>Personal AI Clone <span>(AI Clone)</span></h3>
+        <p>A digital clone of a real person, combining AI-generated video, voice, and image into one convincing, interactive persona.</p>
+        <p>Tech: AI Video, Voice Cloning, Image Gen, GenAI.</p>
+      </article>
+      <article>
+        <h3>Lead Management Automation <span>(Automation)</span></h3>
+        <p>An end-to-end website lead-capture and management system built with n8n agents — capturing, qualifying, and routing leads automatically.</p>
+        <p>Tech: n8n, Agents, Webhooks, Automation.</p>
+      </article>
+      <article>
+        <h3>AI Employee <span>(Agent)</span></h3>
+        <p>An agentic AI that autonomously handles repetitive tasks end to end — an always-on teammate that does the busywork.</p>
+        <p>Tech: Agentic AI, Autonomy, MCP, Automation.</p>
+      </article>
+      <article>
+        <h3>Custom MCP Servers &amp; Micro-Apps <span>(MCP)</span></h3>
+        <p>MCP servers and micro-apps built inside Claude that fetch and act on live data — extending the assistant with real, custom capabilities.</p>
+        <p>Tech: MCP, Claude, Micro-Apps, Live Data.</p>
+      </article>
+      <article>
+        <h3>Real-Time Voice Bot <span>(Voice AI)</span></h3>
+        <p>A human-like conversational voice agent built on Retell AI, shaped with system and meta prompting for natural, real-time dialogue.</p>
+        <p>Tech: Retell AI, Voice, Prompting, Real-Time.</p>
+      </article>
+      <article>
+        <h3>AI Productivity Assistant <span>(Assistant)</span></h3>
+        <p>A personal AI assistant built from scratch, combining the full toolchain — agents, MCP, automation, and voice — into one working product.</p>
+        <p>Tech: Assistant, Full Stack, Claude, MCP.</p>
+      </article>
+    </section>
+
+    <section id="expertise">
+      <h2>Skills</h2>
+      <h3>Prompt &amp; GenAI</h3>
+      <p>Prompt Engineering, System &amp; Meta Prompting, Generative AI Fundamentals, Inference Pipelines, AI Image / Video / Voice Gen, Voice Cloning.</p>
+      <h3>Agentic AI</h3>
+      <p>Autonomous AI Agents, "AI Employees", Model Context Protocol (MCP), MCP Servers &amp; Micro-Apps, Agentic Coding (Claude Code), Build · Debug · Ship.</p>
+      <h3>Automation &amp; Voice</h3>
+      <p>Workflow Automation (n8n), Voice AI Agents, Real-Time, Human-like Bots, Lead-Capture Systems, Repetitive-Task Replacement.</p>
+      <h3>Backend &amp; Deploy</h3>
+      <p>Python, FastAPI, Vector Search, SQLite, API &amp; Webhook Integration, Local LLM Deployment, Ollama &amp; MSTY, AI MVP Delivery.</p>
+    </section>
+
+    <section id="toolkit">
+      <h2>Tools &amp; Platforms</h2>
+      <p><strong>AI &amp; Orchestration:</strong> Claude · Claude Code · MCP · n8n · Antigravity · Open Claw.</p>
+      <p><strong>Models, Voice &amp; Data:</strong> Ollama · MSTY · Retell AI · APIFY · KITE · GitHub · Perplexity.</p>
+      <h3>Specializations</h3>
+      <ul>
+        <li>Agentic AI &amp; autonomous agents</li>
+        <li>Model Context Protocol (MCP)</li>
+        <li>Voice AI — real-time, human-like</li>
+        <li>Workflow automation with n8n</li>
+        <li>Local LLM deployment (Ollama, MSTY)</li>
+        <li>Agentic coding with Claude Code</li>
+      </ul>
+    </section>
+
+    <section id="certificate">
+      <h2>Outskill — AI Certification</h2>
+      <p>Formal recognition of hands-on work across the modern AI stack — agentic AI, automation, and applied generative AI.</p>
+      <img src="cert/Outskill_cert.jpg" width="320" alt="Outskill AI Generalist Accelerator Program certificate awarded to Chandrasekhar Jinendran">
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>Available for AI projects — agents, automations, voice assistants, and AI MVPs.</p>
+      <ul>
+        <li>Email: <a href="mailto:chandrasekharjinendran@gmail.com">chandrasekharjinendran@gmail.com</a></li>
+        <li>LinkedIn: <a href="https://www.linkedin.com/in/chandrasekhar-jinendran">linkedin.com/in/chandrasekhar-jinendran</a></li>
+        <li>GitHub: <a href="https://github.com/chandrasekhar-jinendran">github.com/chandrasekhar-jinendran</a></li>
+      </ul>
+    </section>
+  </main>
 
   <script>
     

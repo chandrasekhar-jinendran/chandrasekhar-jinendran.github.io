@@ -1,0 +1,83 @@
+# Chandrasekhar Jinendran — AI Specialist
+
+> Chandrasekhar Jinendran is an AI Specialist who designs and ships practical AI
+> systems — autonomous agents, workflow automations, voice bots, and custom AI
+> assistants — taking ideas from concept to a deployed product. The focus is
+> speed and outcomes: going from idea to a working, deployed AI MVP rather than a
+> proof of concept.
+
+- Name: Chandrasekhar Jinendran
+- Role: AI Specialist (Generative AI, agentic AI, automation, voice AI)
+- Website: https://chandrasekharjinendran.com/
+- Status: Available for AI projects
+
+## About
+
+Chandrasekhar specializes in applied Generative AI: building AI agents, workflow
+automations, and human-like voice assistants that replace repetitive work and
+ship as real products. He works hands-on across the modern AI stack — prompt
+engineering, agentic AI, the Model Context Protocol (MCP), local LLM deployment,
+and agentic coding with Claude Code. Eight AI products have been shipped end to
+end.
+
+## Services
+
+- **AI Agents & Automations** — Custom AI agents and automations that replace
+  repetitive, manual work; "AI employees" (agentic systems that handle tasks end
+  to end); built across agentic AI, MCP, and Claude Code.
+- **AI Voice Assistants** — Real-time, human-like conversational voice agents on
+  Retell AI, tuned with system and meta prompting and wired into workflows via
+  webhooks and APIs.
+- **AI MVPs & Integration** — AI MVPs taken from idea to a working, deployed
+  product, fast; business-workflow automation with n8n; AI integrated into
+  existing systems through MCP servers and APIs.
+
+## Selected Projects
+
+- **Ledger MCP** (MCP Server) — A Model Context Protocol server (Python · FastMCP
+  · SQLite) exposing 7 governed expense-tracking tools to Claude behind a policy
+  layer: per-transaction and monthly caps, a category allowlist, an
+  emergency-stop freeze, and a full audit trail of every allowed and denied
+  write. 7 offline tests green.
+- **JobSignal** (RAG App) — A RAG web app (FastAPI + vector search + Claude API)
+  that ingests job postings and answers cross-posting skill queries with cited
+  sources. Deployed live, indexing a growing set of postings.
+- **Personal AI Clone** — A digital clone of a real person, combining
+  AI-generated video, voice, and image into one convincing, interactive persona.
+- **Lead Management Automation** — An end-to-end website lead-capture and
+  management system built with n8n agents: capturing, qualifying, and routing
+  leads automatically.
+- **AI Employee** (Agent) — An agentic AI that autonomously handles repetitive
+  tasks end to end — an always-on teammate that does the busywork.
+- **Custom MCP Servers & Micro-Apps** — MCP servers and micro-apps built inside
+  Claude that fetch and act on live data, extending the assistant with real,
+  custom capabilities.
+- **Real-Time Voice Bot** — A human-like conversational voice agent built on
+  Retell AI, shaped with system and meta prompting for natural, real-time
+  dialogue.
+- **AI Productivity Assistant** — A personal AI assistant built from scratch,
+  combining agents, MCP, automation, and voice into one working product.
+
+## Tech Stack
+
+- **AI & orchestration:** Claude, Claude Code, Model Context Protocol (MCP), n8n,
+  Antigravity, Open Claw
+- **Models, voice & data:** Ollama, MSTY, Retell AI, APIFY, KITE, GitHub,
+  Perplexity
+- **Backend & deploy:** Python, FastAPI, vector search, SQLite, API & webhook
+  integration, local LLM deployment, AI MVP delivery
+- **Prompt & GenAI:** prompt engineering, system & meta prompting, generative AI
+  fundamentals, inference pipelines, AI image/video/voice generation, voice
+  cloning
+
+## Credentials
+
+- Outskill — AI Certification (Outskill AI Generalist Accelerator Program):
+  hands-on work across the modern AI stack — agentic AI, automation, and applied
+  generative AI.
+
+## Contact
+
+- Email: chandrasekharjinendran@gmail.com
+- LinkedIn: https://www.linkedin.com/in/chandrasekhar-jinendran
+- GitHub: https://github.com/chandrasekhar-jinendran
