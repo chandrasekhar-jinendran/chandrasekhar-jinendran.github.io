@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Governed MCP servers: tools Claude can't misuse — Chandrasekhar Jinendran</title>
+  <meta name="description" content="How to design Model Context Protocol servers that are safe by construction — allowlists, per-call caps, scoped credentials, idempotency and audit trails.">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/article-mcp-servers.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="Governed MCP servers: tools Claude can't misuse">
+  <meta property="og:description" content="Policy layers, caps, allowlists and audit trails for safe, autonomous tool use.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/article-mcp-servers.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "TechArticle", "headline": "Governed MCP servers: tools Claude can't misuse", "description": "How to design Model Context Protocol servers that are safe by construction — allowlists, per-call caps, scoped credentials, idempotency and audit trails.", "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist", "url": "https://chandrasekharjinendran.com" }, "datePublished": "2026-06-08", "mainEntityOfPage": "https://chandrasekharjinendran.com/article-mcp-servers.html", "keywords": "MCP, Model Context Protocol, AI tool safety, agent security, allowlists, audit trails", "articleSection": "MCP", "wordCount": 1000 },
+    { "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "What is an MCP server?", "acceptedAnswer": { "@type": "Answer", "text": "An MCP server exposes tools and data to an AI model through a standard interface, so an agent can take real actions like querying a database or calling an API." } },
+        { "@type": "Question", "name": "How do you stop an AI agent from misusing a tool?", "acceptedAnswer": { "@type": "Answer", "text": "Enforce limits in the server rather than the prompt: narrow allowlisted tools, per-call caps, scoped short-lived credentials, idempotent writes and a complete audit trail." } },
+        { "@type": "Question", "name": "Should MCP tools be idempotent?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Idempotent writes mean a retried or duplicated call produces the same result, which prevents double-charges and duplicate records when the model retries." } } ] }
+  ]
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+  <div style="position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:transparent;"><div id="cj-progress" style="height:100%;width:0;background:var(--green-500);transition:width .1s linear;"></div></div>
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <a href="blog.html" class="cj-link" style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</a>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <article>
+  <header style="max-width:760px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);">
+      <a href="blog.html" style="color:var(--green-600);font-weight:600;">Blog</a><span>/</span><span>MCP</span>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">Governed MCP servers: tools Claude can&rsquo;t misuse</h1>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:14px;color:var(--text-body);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(150deg,var(--green-600),var(--green-900));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;font-size:15px;">CJ</div>
+      <div><div style="font-weight:600;color:var(--green-800);">Chandrasekhar Jinendran</div><div style="font-size:13px;color:var(--text-muted);">AI Specialist · 7 min read · Jun 8, 2026</div></div>
+    </div>
+  </header>
+
+  <div class="cj-article-grid" style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,52px) clamp(20px,5vw,32px) 0;display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:0;">
+    <aside style="position:relative;">
+      <nav class="cj-toc" style="position:sticky;top:96px;padding-right:28px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">On this page</div>
+        <a href="#risk">Where MCP actually goes wrong</a>
+        <a href="#allowlist">Allowlists over blocklists</a>
+        <a href="#caps">Per-call caps and rate limits</a>
+        <a href="#audit">Scoped credentials, idempotency &amp; audit trails</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <div>
+      <div style="background:var(--green-100);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px;">TL;DR</div>
+        <p style="font-size:16px;line-height:1.65;color:var(--ink-700);margin:0;">The danger with autonomous tool use isn&rsquo;t a model &ldquo;going rogue&rdquo; — it&rsquo;s an over-broad tool with no limits. A governed <strong>MCP server</strong> makes misuse structurally impossible: <strong>allowlists</strong> over blocklists, <strong>per-call caps</strong>, <strong>scoped, short-lived credentials</strong>, and an <strong>audit trail</strong> for every action.</p>
+      </div>
+
+      <div class="cj-prose">
+        <p>Model Context Protocol (MCP) is the cleanest way to give a model real tools — query a database, send a message, move money. But the same wiring that makes an agent useful makes it dangerous if you hand it a tool that can do anything. The fix is not a smarter model; it is a <strong>governed server</strong>.</p>
+        <p>Governance here means the server, not the prompt, enforces what is allowed. A prompt can be talked around; a policy layer cannot.</p>
+        <h2 id="risk">Where MCP actually goes wrong</h2>
+        <p>Almost every incident I have seen traces back to one of two design smells, not to the model behaving unexpectedly:</p>
+        <ul>
+          <li><strong>Over-broad tools.</strong> A single <code>run_sql</code> tool with write access is a loaded gun. The model doesn&rsquo;t need to be malicious to drop a table — an ambiguous instruction is enough.</li>
+          <li><strong>Ambient authority.</strong> Handing the server a long-lived admin key means every tool inherits god-mode. The blast radius of any mistake is the whole system.</li>
+        </ul>
+        <p>Treat the agent as an untrusted client that happens to be clever. You would not give an unknown API caller unrestricted DB access; the agent gets the same scepticism.</p>
+        <h2 id="allowlist">Allowlists over blocklists</h2>
+        <p>Blocklists fail because you can never enumerate every bad action. Allowlists flip the default to <em>deny</em>: expose narrow, intention-revealing tools (<code>book_slot</code>, <code>refund_order</code>) instead of generic ones (<code>run_sql</code>). Each tool does one thing, validates its own inputs, and rejects anything outside its contract.</p>
+        <p>This also makes the agent <em>better</em> — a small set of well-named tools is far easier for the model to use correctly than one powerful escape hatch.</p>
+        <h2 id="caps">Per-call caps and rate limits</h2>
+        <p>Even a narrow tool needs limits. A <code>refund_order</code> tool should cap the amount, require an order that exists, and rate-limit how many refunds run per minute. Put these checks in the server so they hold regardless of what the model was convinced to request.</p>
+        <ul>
+          <li>Bound every numeric argument (amount, quantity, page size).</li>
+          <li>Rate-limit and add a daily ceiling per tool.</li>
+          <li>Require confirmation tokens for irreversible writes.</li>
+        </ul>
+        <h2 id="audit">Scoped credentials, idempotency &amp; audit trails</h2>
+        <p>Give each tool its own <strong>short-lived, least-privilege credential</strong> — a token that can book but not delete. Make every write <strong>idempotent</strong> so a retried call can&rsquo;t double-charge. And log every tool call with inputs, outputs and the decision that allowed it.</p>
+        <p>The audit trail is what turns &ldquo;something weird happened&rdquo; into a five-minute investigation. It is also what lets you ship autonomy with a straight face: you can prove, after the fact, exactly what the agent did and why it was permitted.</p>
+      </div>
+
+      <div style="background:var(--green-100);border-left:4px solid var(--green-600);border-radius:var(--radius-md);padding:var(--space-6);margin:8px 0 30px;"><p style="font-size:16px;line-height:1.7;color:var(--ink-700);margin:0;font-style:italic;">A tool the model literally cannot misuse beats a prompt that politely asks it not to. Push safety down into the server, not up into the instructions.</p></div>
+
+      <div style="background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-6);margin:36px 0;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--green-800);margin:0 0 14px;">Key takeaways</h2>
+        <ul style="margin:0;padding-left:20px;color:var(--ink-700);font-size:16px;line-height:1.7;">
+          <li>Most MCP risk comes from over-broad tools and ambient authority, not rogue models.</li>
+          <li>Expose narrow, single-purpose tools and deny by default.</li>
+          <li>Cap every argument, rate-limit, and gate irreversible writes.</li>
+          <li>Use scoped short-lived credentials, idempotent writes, and a full audit trail.</li>
+        </ul>
+      </div>
+
+      <section id="faq" class="cj-faq" style="margin:48px 0 0;scroll-margin-top:90px;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-0.02em;color:var(--green-800);margin:0 0 18px;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is an MCP server?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">An MCP (Model Context Protocol) server exposes tools and data to an AI model through a standard interface, so an agent can take real actions like querying a database or calling an API.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">How do you stop an AI agent from misusing a tool?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Enforce limits in the server rather than the prompt: narrow allowlisted tools, per-call caps, scoped short-lived credentials, idempotent writes and a complete audit trail.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Should MCP tools be idempotent?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Yes. Idempotent writes mean a retried or duplicated call produces the same result, which prevents double-charges and duplicate records when the model retries.</p>
+          </details>
+        </div>
+      </section>
+
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(150deg,var(--green-900),var(--green-950));border-radius:var(--radius-xl);padding:var(--space-7);margin:48px 0 0;color:var(--text-on-dark);">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;">CJ</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--font-display);font-weight:700;color:#fff;">Chandrasekhar Jinendran</div>
+          <div style="font-size:14px;color:var(--text-on-dark-muted);margin-top:4px;">I build agents, automations and AI MVPs that ship as real products.</div>
+        </div>
+        <a href="contact.html" class="ks-btn ks-btn--inverse" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--green-900);font-family:var(--font-display);font-weight:600;font-size:15px;padding:13px 24px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Work with me <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  </article>
+
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,5vw,32px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">Related in this cluster</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+      <a href="article-meta-prompting.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Prompting</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">System &amp; meta prompting for reliable agents</h3>
+      </a>
+      <a href="article-ai-employees.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Agents</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Designing "AI employees" that work end to end</h3>
+      </a>
+      <a href="article.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Voice AI</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Building human-like voice agents with Retell AI</h3>
+      </a>
+    </div>
+  </section>
+
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

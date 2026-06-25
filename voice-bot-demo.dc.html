@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#08130d}
+    body{font-family:'DM Sans',system-ui,sans-serif}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%,#0f3024,#070f0a)">
+  <div style="{{ stageStyle }}">{{ scene }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:687}}">
+class Component extends DCLogic {
+  state = { now: 0, scale: 1 };
+  W = 1000; H = 687; LOOP = 10;
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eo(x){ return 1 - Math.pow(1 - this.clamp(x,0,1), 3); }
+  componentDidMount(){ this.fit(); this._r=()=>this.fit(); window.addEventListener('resize',this._r); this.t0=performance.now();
+    const tick=()=>{ this.setState({ now:((performance.now()-this.t0)/1000)%this.LOOP }); this._raf=requestAnimationFrame(tick); }; this._raf=requestAnimationFrame(tick); }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize',this._r); }
+  fit(){ this.setState({ scale: Math.min(window.innerWidth/this.W, window.innerHeight/this.H) }); }
+
+  scene(){
+    const h=React.createElement, t=this.state.now;
+    const C={ acc:'#5eead4', green:'#2F9655', sub:'#9fb6ab', mut:'#6f8a7d' };
+    const turns=[
+      { who:'caller', text:"Hi, I'd like to book a table for four tonight.", at:0.6 },
+      { who:'bot', text:"Of course! 7:30 PM works — shall I confirm it?", at:2.6 },
+      { who:'caller', text:"Yes please, under Priya.", at:5.0 },
+      { who:'bot', text:"Booked for Priya, 7:30 PM. See you tonight!", at:6.8 },
+    ];
+    // who's speaking now (bot speaks just before its bubble)
+    const botSpeaking = (t>1.8&&t<2.6)||(t>6.0&&t<6.8);
+    const callerSpeaking = (t<0.6)||(t>4.2&&t<5.0);
+    const speaking = botSpeaking||callerSpeaking;
+    const bars=Array.from({length:13},(_,i)=>{ const base=speaking?(0.25+0.75*Math.abs(Math.sin(t*8+i*0.7))):0.12; return base; });
+    const secs=Math.floor(t*1.3)+8; const tc=`00:${secs<10?'0':''}${secs}`;
+    const bubble=(m,i)=>{ const en=this.clamp((t-m.at)/0.45,0,1); if(t<m.at) return null; const bot=m.who==='bot';
+      return h('div',{key:i,style:{display:'flex',justifyContent:bot?'flex-start':'flex-end',opacity:en,transform:`translateY(${(1-this.eo(en))*12}px)`}},
+        h('div',{style:{maxWidth:'78%',background:bot?'rgba(47,150,85,0.22)':'rgba(255,255,255,0.08)',border:`1px solid ${bot?'rgba(94,234,212,0.3)':'rgba(255,255,255,0.12)'}`,borderRadius:bot?'16px 16px 16px 5px':'16px 16px 5px 16px',padding:'12px 16px'}},
+          h('div',{style:{fontSize:12,fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',color:bot?C.acc:C.mut,marginBottom:4}},bot?'Voice agent':'Caller'),
+          h('div',{style:{fontSize:18,lineHeight:1.4,color:'#fff'}},m.text)));
+    };
+    return h('div',{style:{position:'absolute',inset:0,display:'flex',flexDirection:'column'}},
+      // top bar
+      h('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'28px 40px'}},
+        h('div',{style:{display:'flex',alignItems:'center',gap:10}},
+          h('span',{style:{width:9,height:9,borderRadius:5,background:'#34d399',boxShadow:'0 0 10px #34d399'}}),
+          h('span',{style:{fontSize:15,fontWeight:600,color:C.sub}},'Live call · '),
+          h('span',{style:{fontFamily:"'DM Mono',monospace",fontSize:15,color:'#fff'}},tc)),
+        h('span',{style:{fontSize:13,fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',color:C.acc,border:`1px solid rgba(94,234,212,0.4)`,padding:'5px 12px',borderRadius:999}},'Powered by Retell AI')),
+      // avatar + waveform
+      h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:18,padding:'4px 0 8px'}},
+        h('div',{style:{position:'relative',width:104,height:104}},
+          h('div',{style:{position:'absolute',inset:speaking?-10:-2,borderRadius:'50%',border:`2px solid rgba(94,234,212,${speaking?0.5:0.15})`,transition:'none'}}),
+          h('div',{style:{position:'absolute',inset:0,borderRadius:'50%',background:'linear-gradient(135deg,#2F9655,#15452A)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 10px 30px rgba(47,150,85,0.4)'}},
+            h('svg',{width:46,height:46,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M12 4a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3zM5 11a7 7 0 0 0 14 0M12 18v3M8 21h8'})))),
+        h('div',{style:{display:'flex',alignItems:'center',gap:5,height:56}},
+          bars.map((b,i)=>h('div',{key:i,style:{width:6,height:Math.max(6,b*56)+'px',borderRadius:3,background:`linear-gradient(180deg,${C.acc},${C.green})`,opacity:0.85}})))),
+      // transcript
+      h('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:11,padding:'8px 48px 40px',justifyContent:'flex-end'}},
+        turns.map((m,i)=>bubble(m,i)))
+    );
+  }
+  renderVals(){ return { scene:this.scene(), stageStyle:{ width:this.W+'px', height:this.H+'px', transform:`scale(${this.state.scale})`, transformOrigin:'center', background:'#0c2419', borderRadius:'18px', position:'relative', overflow:'hidden', flex:'none', boxShadow:'0 30px 70px rgba(0,0,0,0.45)' } }; }
+}
+</script>
+</body>
+</html>

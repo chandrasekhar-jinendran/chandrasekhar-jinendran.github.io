@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#0b1f17}
+    body{font-family:'DM Sans',system-ui,sans-serif}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%,#11362a,#0a1c15)">
+  <div style="{{ stageStyle }}">{{ scene }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:687}}">
+class Component extends DCLogic {
+  state = { now: 0, scale: 1 };
+  W = 1000; H = 687; LOOP = 11;
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eo(x){ return 1 - Math.pow(1 - this.clamp(x,0,1), 3); }
+  componentDidMount(){ this.fit(); this._r=()=>this.fit(); window.addEventListener('resize',this._r); this.t0=performance.now();
+    const tick=()=>{ this.setState({ now:((performance.now()-this.t0)/1000)%this.LOOP }); this._raf=requestAnimationFrame(tick); }; this._raf=requestAnimationFrame(tick); }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize',this._r); }
+  fit(){ this.setState({ scale: Math.min(window.innerWidth/this.W, window.innerHeight/this.H) }); }
+
+  scene(){
+    const h=React.createElement, t=this.state.now;
+    const C={ ink:'#0f2e22', green:'#2F9655', greenDk:'#15452A', sub:'#5c7064', mut:'#9aab9f', line:'#e3ece6', tint:'#eaf4ee', panel:'#fff' };
+    const tasks=[
+      { lab:'Reply to invoice query', meta:'Inbox · Acme Co', start:0.8, dur:1.4 },
+      { lab:'Schedule the product demo', meta:'Calendar · Thu 3 PM', start:2.6, dur:1.4 },
+      { lab:'Update CRM with new lead', meta:'HubSpot · Maya Chen', start:4.4, dur:1.4 },
+      { lab:'Draft weekly status report', meta:'Docs · auto-summary', start:6.2, dur:1.5 },
+    ];
+    const doneCount=tasks.filter(tk=>t>tk.start+tk.dur).length;
+    const row=(tk,i)=>{
+      const working = t>=tk.start && t<=tk.start+tk.dur;
+      const done = t>tk.start+tk.dur;
+      const pending = t<tk.start;
+      const en=this.clamp((t-(tk.start-0.6))/0.5,0,1);
+      return h('div',{key:i,style:{display:'flex',alignItems:'center',gap:16,background:C.panel,border:`1.5px solid ${working?C.green:C.line}`,borderRadius:15,padding:'16px 20px',opacity:pending?0.5:1,boxShadow:working?'0 12px 26px rgba(47,150,85,0.16)':'0 4px 12px rgba(15,46,34,0.04)',transform:`scale(${working?1.015:1})`,transition:'none'}},
+        h('div',{style:{width:30,height:30,flex:'none',display:'flex',alignItems:'center',justifyContent:'center'}},
+          done?h('div',{style:{width:30,height:30,borderRadius:'50%',background:C.green,display:'flex',alignItems:'center',justifyContent:'center'}},
+                h('svg',{width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M5 13l4 4L19 7'})))
+          :working?h('div',{style:{width:24,height:24,borderRadius:'50%',border:`3px solid ${C.tint}`,borderTopColor:C.green,animation:'spin 0.7s linear infinite'}})
+          :h('div',{style:{width:22,height:22,borderRadius:'50%',border:`2px solid ${C.line}`}})),
+        h('div',{style:{flex:1}},
+          h('div',{style:{fontSize:20,fontWeight:600,color:C.ink,textDecoration:done?'none':'none'}},tk.lab),
+          h('div',{style:{fontSize:14,color:C.mut,marginTop:3,fontFamily:"'DM Mono',monospace"}},tk.meta)),
+        working?h('span',{style:{fontSize:14,fontWeight:700,color:C.green,background:C.tint,padding:'6px 13px',borderRadius:999}},'working…')
+        :done?h('span',{style:{fontSize:14,fontWeight:700,color:C.green}},'done')
+        :h('span',{style:{fontSize:14,fontWeight:600,color:C.mut}},'queued'));
+    };
+    return h('div',{style:{position:'absolute',inset:0,padding:'40px 50px',display:'flex',flexDirection:'column',gap:18}},
+      h('div',{style:{display:'flex',alignItems:'center',gap:14}},
+        h('div',{style:{position:'relative',width:48,height:48}},
+          h('div',{style:{position:'absolute',inset:0,borderRadius:13,background:`linear-gradient(135deg,${C.green},${C.greenDk})`,display:'flex',alignItems:'center',justifyContent:'center'}},
+            h('svg',{width:26,height:26,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('rect',{x:4,y:8,width:16,height:12,rx:3}),h('path',{d:'M12 8V4M9 14h0M15 14h0'}))),
+          h('span',{style:{position:'absolute',right:-2,bottom:-2,width:14,height:14,borderRadius:7,background:'#34d399',border:'2px solid #f4f8f5'}})),
+        h('div',{style:{flex:1}},
+          h('div',{style:{fontSize:24,fontWeight:700,color:C.ink}},'AI Employee'),
+          h('div',{style:{fontSize:14,color:C.mut}},'Always on · works tasks end to end')),
+        h('div',{style:{textAlign:'right'}},
+          h('div',{style:{fontSize:30,fontWeight:800,color:C.green,lineHeight:1}},doneCount+'/'+tasks.length),
+          h('div',{style:{fontSize:13,color:C.mut,marginTop:2}},'today'))),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:11,flex:1}},tasks.map((tk,i)=>row(tk,i))),
+      (doneCount===tasks.length)?h('div',{style:{display:'flex',alignItems:'center',gap:12,background:C.greenDk,borderRadius:14,padding:'15px 20px'}},
+        h('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none',stroke:C.green,strokeWidth:3,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M5 13l4 4L19 7'})),
+        h('span',{style:{fontSize:17,fontWeight:600,color:'#eaf4ee'}},'Inbox zero — all tasks handled autonomously.')):h('div',{style:{height:52}})
+    );
+  }
+  renderVals(){ return { scene:this.scene(), stageStyle:{ width:this.W+'px', height:this.H+'px', transform:`scale(${this.state.scale})`, transformOrigin:'center', background:'#f4f8f5', borderRadius:'18px', position:'relative', overflow:'hidden', flex:'none', boxShadow:'0 30px 70px rgba(0,0,0,0.4)' } }; }
+}
+</script>
+</body>
+</html>

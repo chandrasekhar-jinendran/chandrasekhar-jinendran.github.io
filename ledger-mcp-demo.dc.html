@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#0b1f17}
+    body{font-family:'DM Sans',system-ui,sans-serif}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%,#11362a,#0a1c15)">
+  <div style="{{ stageStyle }}">{{ scene }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:687}}">
+class Component extends DCLogic {
+  state = { now: 0, scale: 1 };
+  W = 1000; H = 687; STEP = 2.0;
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eo(x){ return 1 - Math.pow(1 - this.clamp(x,0,1), 3); }
+  eob(x){ x=this.clamp(x,0,1); const c=1.70158,c3=c+1; return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2); }
+
+  REQS = [
+    { tool:'add_expense', amt:'$42', cat:'Office Supplies', verdict:'allow', reason:'within caps · category allowed', checks:[1,1,1,1], time:'14:02' },
+    { tool:'add_expense', amt:'$980', cat:'Travel', verdict:'deny', reason:'exceeds per-txn cap of $500', checks:[0,1,1,1], time:'14:03' },
+    { tool:'add_expense', amt:'$120', cat:'Client Meals', verdict:'allow', reason:'within caps · category allowed', checks:[1,1,1,1], time:'14:05' },
+    { tool:'freeze_ledger', amt:'', cat:'emergency stop', verdict:'freeze', reason:'all writes paused by operator', checks:null, time:'14:07' },
+    { tool:'add_expense', amt:'$30', cat:'Office Supplies', verdict:'deny', reason:'ledger is frozen', checks:[1,1,1,0], time:'14:08' },
+  ];
+  get LOOP(){ return this.REQS.length*this.STEP + 1.2; }
+
+  componentDidMount(){ this.fit(); this._r=()=>this.fit(); window.addEventListener('resize',this._r); this.t0=performance.now();
+    const tick=()=>{ this.setState({ now:((performance.now()-this.t0)/1000)%this.LOOP }); this._raf=requestAnimationFrame(tick); }; this._raf=requestAnimationFrame(tick); }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize',this._r); }
+  fit(){ this.setState({ scale: Math.min(window.innerWidth/this.W, window.innerHeight/this.H) }); }
+
+  scene(){
+    const h=React.createElement, t=this.state.now;
+    const C={ ink:'#0f2e22', green:'#2F9655', greenDk:'#15452A', red:'#e11d48', redTint:'#fde7ea', amber:'#d97706', amberTint:'#fdf0dd', sub:'#5c7064', mut:'#9aab9f', line:'#e3ece6', tint:'#eaf4ee', panel:'#fff' };
+    const N=this.REQS.length;
+    let step=Math.floor(t/this.STEP); if(step>N-1) step=N-1;
+    const lt=t-step*this.STEP;
+    const cur=this.REQS[step];
+    const frozenNow = step>=3 && !(step===3); // after freeze step engaged
+    const resolved=(i)=> (step>i) || (step===i && lt>1.45);
+
+    const CHECK_LABELS=['≤ $500 / txn','≤ $5,000 / mo','category allowlist','not frozen'];
+    const vColor=(v)=> v==='allow'?C.green : v==='deny'?C.red : C.amber;
+
+    // ── policy chip strip ──
+    const chip=(txt,i)=>h('div',{key:i,style:{display:'flex',alignItems:'center',gap:7,background:C.tint,border:`1px solid ${C.line}`,borderRadius:999,padding:'7px 13px'}},
+      h('span',{style:{width:7,height:7,borderRadius:4,background:C.green}}),
+      h('span',{style:{fontSize:13,fontWeight:600,color:C.greenDk}},txt));
+
+    // ── current request card (left) ──
+    const reqIn=this.clamp(lt/0.45,0,1);
+    const evalP=this.clamp((lt-0.5)/0.8,0,1);
+    const verdictShown=lt>1.35;
+    const verdictP=this.clamp((lt-1.35)/0.35,0,1);
+    const isFreeze=cur.verdict==='freeze';
+
+    const checkRow=(lbl,ok,i)=>{
+      const lit=evalP*4 > i+0.3;
+      const fail=ok===0;
+      return h('div',{key:i,style:{display:'flex',alignItems:'center',gap:10,opacity:lit?1:0.3,transition:'none'}},
+        h('div',{style:{width:22,height:22,borderRadius:'50%',flex:'none',background:!lit?'#eef2ef':(fail?C.red:C.green),display:'flex',alignItems:'center',justifyContent:'center'}},
+          lit?(fail?h('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3.4,strokeLinecap:'round'},h('path',{d:'M6 6l12 12M18 6L6 18'}))
+                  :h('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3.4,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M5 13l4 4L19 7'}))):null),
+        h('span',{style:{fontSize:16,fontWeight:fail?700:500,color:fail?C.red:C.ink}},lbl));
+    };
+
+    const leftPanel=h('div',{style:{flex:'1.05',display:'flex',flexDirection:'column',gap:16}},
+      h('div',{style:{fontSize:13,fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',color:C.mut}},'Incoming tool call'),
+      // request bubble
+      h('div',{style:{background:C.greenDk,borderRadius:16,padding:'16px 20px',opacity:reqIn,transform:`translateY(${(1-this.eo(reqIn))*14}px)`}},
+        h('div',{style:{display:'flex',alignItems:'center',gap:10,marginBottom:isFreeze?0:10}},
+          h('div',{style:{width:26,height:26,borderRadius:7,background:'#d97757',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:14,flex:'none'}},'C'),
+          h('span',{style:{fontFamily:"'DM Mono',monospace",fontSize:16,color:'#8fe3b4'}},cur.tool+'()')),
+        isFreeze?null:h('div',{style:{display:'flex',alignItems:'baseline',gap:14}},
+          h('span',{style:{fontSize:34,fontWeight:800,color:'#fff',fontFamily:"'DM Mono',monospace"}},cur.amt),
+          h('span',{style:{fontSize:16,color:'#bfe0cf'}},cur.cat))),
+      // policy panel
+      h('div',{style:{flex:1,background:C.panel,border:`1.5px solid ${C.line}`,borderRadius:16,padding:'18px 20px',boxShadow:'0 8px 22px rgba(15,46,34,0.06)',display:'flex',flexDirection:'column'}},
+        h('div',{style:{display:'flex',alignItems:'center',gap:9,marginBottom:14}},
+          h('svg',{width:20,height:20,viewBox:'0 0 24 24',fill:'none',stroke:C.green,strokeWidth:2,strokeLinejoin:'round'},h('path',{d:'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z'})),
+          h('span',{style:{fontSize:17,fontWeight:700,color:C.ink}},'Policy layer')),
+        isFreeze
+          ? h('div',{style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12,opacity:this.clamp(evalP*1.5,0,1)}},
+              h('div',{style:{width:60,height:60,borderRadius:16,background:C.amberTint,display:'flex',alignItems:'center',justifyContent:'center'}},
+                h('svg',{width:30,height:30,viewBox:'0 0 24 24',fill:'none',stroke:C.amber,strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('rect',{x:5,y:11,width:14,height:9,rx:2}),h('path',{d:'M8 11V8a4 4 0 0 1 8 0v3'}))),
+              h('span',{style:{fontSize:18,fontWeight:700,color:C.amber}},'Emergency freeze engaged'))
+          : h('div',{style:{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',gap:13}},
+              CHECK_LABELS.map((lbl,i)=>checkRow(lbl,cur.checks[i],i))),
+        // verdict stamp
+        verdictShown?h('div',{style:{marginTop:14,display:'flex',alignItems:'center',gap:12,opacity:verdictP,transform:`scale(${0.9+0.1*this.eob(verdictP)})`,transformOrigin:'left center'}},
+          h('span',{style:{display:'inline-flex',alignItems:'center',gap:8,background:vColor(cur.verdict),color:'#fff',fontWeight:800,fontSize:18,letterSpacing:'0.08em',padding:'8px 16px',borderRadius:10,textTransform:'uppercase'}},
+            cur.verdict==='allow'?'Allowed':cur.verdict==='deny'?'Denied':'Frozen'),
+          h('span',{style:{fontSize:14.5,color:C.sub,fontWeight:500}},cur.reason)):null)
+    );
+
+    // ── audit trail (right) ──
+    const trail=[];
+    for(let i=0;i<N;i++){ if(resolved(i)) trail.push({...this.REQS[i], idx:i}); }
+    trail.reverse();
+    const trailRow=(r,k)=>{
+      const isNew=k===0;
+      const ap=isNew?this.clamp((lt-1.45)/0.4,0,1):1;
+      const c=vColor(r.verdict);
+      return h('div',{key:r.idx,style:{display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:11,background:isNew?C.tint:'transparent',opacity:ap,transform:`translateY(${(1-this.eo(ap))*-8}px)`,borderBottom:`1px solid ${C.line}`}},
+        h('span',{style:{width:9,height:9,borderRadius:5,background:c,flex:'none',boxShadow:`0 0 0 3px ${c}22`}}),
+        h('div',{style:{flex:1,minWidth:0}},
+          h('div',{style:{fontFamily:"'DM Mono',monospace",fontSize:14,color:C.ink,fontWeight:600}},r.tool+(r.amt?' '+r.amt:'')),
+          h('div',{style:{fontSize:12.5,color:C.mut}},r.cat)),
+        h('span',{style:{fontSize:12,fontWeight:700,letterSpacing:'0.06em',color:c,textTransform:'uppercase'}},r.verdict),
+        h('span',{style:{fontFamily:"'DM Mono',monospace",fontSize:12,color:C.mut,width:42,textAlign:'right'}},r.time));
+    };
+    const rightPanel=h('div',{style:{flex:'0.92',background:C.panel,border:`1.5px solid ${C.line}`,borderRadius:16,padding:'16px 14px',boxShadow:'0 8px 22px rgba(15,46,34,0.06)',display:'flex',flexDirection:'column'}},
+      h('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 4px 12px',borderBottom:`1.5px solid ${C.line}`}},
+        h('span',{style:{fontSize:15,fontWeight:700,color:C.ink}},'Audit trail'),
+        h('span',{style:{fontSize:12,fontWeight:600,color:C.mut,fontFamily:"'DM Mono',monospace"}},trail.length+' / '+N+' logged')),
+      h('div',{style:{flex:1,display:'flex',flexDirection:'column',marginTop:6}},
+        trail.length?trail.map((r,k)=>trailRow(r,k)):h('div',{style:{flex:1,display:'flex',alignItems:'center',justifyContent:'center',color:C.mut,fontSize:14}},'awaiting writes…')));
+
+    return h('div',{style:{position:'absolute',inset:0,padding:'34px 40px',display:'flex',flexDirection:'column',gap:18}},
+      // header
+      h('div',{style:{display:'flex',alignItems:'center',gap:13}},
+        h('div',{style:{width:44,height:44,borderRadius:12,background:C.greenDk,display:'flex',alignItems:'center',justifyContent:'center'}},
+          h('svg',{width:24,height:24,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2,strokeLinejoin:'round'},h('path',{d:'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z'}),h('path',{d:'M9 12l2 2 4-4',strokeLinecap:'round'}))),
+        h('div',{style:{flex:1}},
+          h('div',{style:{fontSize:24,fontWeight:700,color:C.ink}},'Ledger MCP'),
+          h('div',{style:{fontSize:14,color:C.mut}},'7 governed expense tools, behind a policy layer')),
+        h('div',{style:{display:'flex',gap:8}},['≤ $500 / txn','≤ $5k / mo','allowlist','audit'].map((x,i)=>chip(x,i)))),
+      // body
+      h('div',{style:{flex:1,display:'flex',gap:18,minHeight:0}},leftPanel,rightPanel)
+    );
+  }
+  renderVals(){ return { scene:this.scene(), stageStyle:{ width:this.W+'px', height:this.H+'px', transform:`scale(${this.state.scale})`, transformOrigin:'center', background:'#f4f8f5', borderRadius:'18px', position:'relative', overflow:'hidden', flex:'none', boxShadow:'0 30px 70px rgba(0,0,0,0.4)' } }; }
+}
+</script>
+</body>
+</html>

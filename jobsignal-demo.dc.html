@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#0b1f17}
+    body{font-family:'DM Sans',system-ui,sans-serif}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%,#11362a,#0a1c15)">
+  <div style="{{ stageStyle }}">{{ scene }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:687}}">
+class Component extends DCLogic {
+  state = { now: 0, scale: 1 };
+  W = 1000; H = 687; LOOP = 11;
+
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eo(x){ return 1 - Math.pow(1 - this.clamp(x,0,1), 3); }
+  eob(x){ x=this.clamp(x,0,1); const c=1.70158, c3=c+1; return 1 + c3*Math.pow(x-1,3) + c*Math.pow(x-1,2); }
+
+  componentDidMount(){
+    this.fit(); this._r=()=>this.fit(); window.addEventListener('resize',this._r);
+    this.t0=performance.now();
+    const tick=()=>{ this.setState({ now: ((performance.now()-this.t0)/1000)%this.LOOP }); this._raf=requestAnimationFrame(tick); };
+    this._raf=requestAnimationFrame(tick);
+  }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize',this._r); }
+  fit(){ this.setState({ scale: Math.min(window.innerWidth/this.W, window.innerHeight/this.H) }); }
+
+  typed(full, t, start, cps){ const n=this.clamp(Math.floor((t-start)*cps),0,full.length); return full.slice(0,n); }
+
+  scene(){
+    const h=React.createElement, t=this.state.now;
+    const C={ ink:'#0f2e22', green:'#2F9655', greenDk:'#15452A', sub:'#5c7064', mut:'#9aab9f', line:'#e3ece6', tint:'#eaf4ee', panel:'#ffffff' };
+    const q="Which open roles need Kafka + Python?";
+    const typedQ=this.typed(q,t,0.5,17);
+    const caret=(t<3.0 && Math.floor(t*2)%2===0 && typedQ.length<q.length)?'|':'';
+    const searching = t>2.6 && t<4.4;
+    const scanP=this.clamp((t-2.6)/1.7,0,1);
+
+    const results=[
+      { role:'Senior Data Engineer', co:'Northwind', tags:['Kafka','Python','Spark'], src:'#JS-4471', at:4.6 },
+      { role:'Platform Engineer', co:'Lumen Labs', tags:['Kafka','Python','Go'], src:'#JS-4490', at:5.0 },
+      { role:'Backend Engineer (Streaming)', co:'Cobalt', tags:['Python','Kafka'], src:'#JS-4512', at:5.4 },
+    ];
+
+    const card=(r,i)=>{
+      const en=this.clamp((t-r.at)/0.5,0,1);
+      return h('div',{key:i,style:{display:'flex',alignItems:'center',gap:18,background:C.panel,border:`1.5px solid ${C.line}`,borderRadius:16,padding:'16px 20px',opacity:en,transform:`translateX(${(1-this.eo(en))*40}px)`,boxShadow:'0 6px 18px rgba(15,46,34,0.05)'}},
+        h('div',{style:{width:44,height:44,borderRadius:12,background:C.tint,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}},
+          h('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none',stroke:C.green,strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('rect',{x:3,y:7,width:18,height:13,rx:2}),h('path',{d:'M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'}))),
+        h('div',{style:{flex:1,minWidth:0}},
+          h('div',{style:{fontSize:21,fontWeight:700,color:C.ink}},r.role),
+          h('div',{style:{fontSize:15,color:C.mut,marginTop:2}},r.co),
+          h('div',{style:{display:'flex',gap:7,marginTop:9}},r.tags.map((tg,j)=>h('span',{key:j,style:{fontSize:13,fontWeight:600,color:tg==='Kafka'||tg==='Python'?C.greenDk:C.sub,background:tg==='Kafka'||tg==='Python'?C.tint:'#f1f4f2',padding:'4px 11px',borderRadius:999}},tg)))),
+        h('div',{style:{fontFamily:"'DM Mono',monospace",fontSize:13,color:C.green,background:C.tint,padding:'6px 11px',borderRadius:8,whiteSpace:'nowrap'}},'cite '+r.src));
+    };
+
+    const ans=this.clamp((t-6.4)/0.6,0,1);
+
+    return h('div',{style:{position:'absolute',inset:0,padding:44,display:'flex',flexDirection:'column',gap:20}},
+      // header
+      h('div',{style:{display:'flex',alignItems:'center',gap:12}},
+        h('div',{style:{width:40,height:40,borderRadius:11,background:C.greenDk,display:'flex',alignItems:'center',justifyContent:'center'}},
+          h('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2.4,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M4 18V8M10 18V4M16 18v-7M22 18h-20'}))),
+        h('div',null,h('div',{style:{fontSize:24,fontWeight:700,color:C.ink}},'JobSignal'),h('div',{style:{fontSize:14,color:C.mut}},'RAG over 1,240 live job posts'))),
+      // search bar
+      h('div',{style:{display:'flex',alignItems:'center',gap:14,background:C.panel,border:`2px solid ${searching||t>4.4?C.green:C.line}`,borderRadius:16,padding:'18px 22px',transition:'none',boxShadow:'0 8px 22px rgba(15,46,34,0.06)'}},
+        h('svg',{width:24,height:24,viewBox:'0 0 24 24',fill:'none',stroke:C.green,strokeWidth:2.4,strokeLinecap:'round'},h('circle',{cx:11,cy:11,r:7}),h('path',{d:'M21 21l-4-4'})),
+        h('div',{style:{flex:1,fontSize:22,fontWeight:500,color:typedQ?C.ink:C.mut}},(typedQ||'Ask anything…')+caret)),
+      // searching shimmer
+      searching ? h('div',{style:{display:'flex',alignItems:'center',gap:12,color:C.sub,fontSize:16,fontWeight:600}},
+        h('div',{style:{flex:1,height:6,background:C.line,borderRadius:3,overflow:'hidden'}},h('div',{style:{height:'100%',width:scanP*100+'%',background:`linear-gradient(90deg,${C.green},${C.greenDk})`,borderRadius:3}})),
+        h('span',{style:{fontFamily:"'DM Mono',monospace",whiteSpace:'nowrap'}},'scanning vectors '+Math.round(scanP*1240))) : null,
+      // results
+      (t>4.4) ? h('div',{style:{display:'flex',flexDirection:'column',gap:12}},results.map((r,i)=>card(r,i))) : null,
+      // answer w/ citations
+      (t>6.4) ? h('div',{style:{marginTop:'auto',display:'flex',gap:14,alignItems:'flex-start',background:C.greenDk,borderRadius:16,padding:'18px 22px',opacity:ans,transform:`translateY(${(1-this.eo(ans))*16}px)`}},
+        h('div',{style:{width:32,height:32,borderRadius:9,background:C.green,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}},
+          h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M5 13l4 4L19 7'}))),
+        h('div',{style:{fontSize:18,lineHeight:1.5,color:'#eaf4ee',fontWeight:500}},'3 open roles match — every claim cited to its source posting. ',h('span',{style:{color:'#8fe3b4',fontFamily:"'DM Mono',monospace",fontSize:15}},'#JS-4471 · #JS-4490 · #JS-4512'))) : null
+    );
+  }
+
+  renderVals(){
+    return {
+      scene: this.scene(),
+      stageStyle: { width:this.W+'px', height:this.H+'px', transform:`scale(${this.state.scale})`, transformOrigin:'center', background:'#f4f8f5', borderRadius:'18px', position:'relative', overflow:'hidden', flex:'none', boxShadow:'0 30px 70px rgba(0,0,0,0.4)' }
+    };
+  }
+}
+</script>
+</body>
+</html>

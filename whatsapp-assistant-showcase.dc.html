@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#dde8e1}
+    body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    @keyframes typingdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+    @keyframes floaty{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-26px) scale(1.08)}}
+    @keyframes floaty2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-26px,24px) scale(1.1)}}
+    @keyframes pulsedot{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+  </style>
+</helmet>
+
+<div style="position:fixed;inset:0;background:radial-gradient(125% 105% at 50% -10%, #f5f9f6 0%, #e7f0ea 50%, #dae6df 100%);overflow:hidden">
+  <div style="position:absolute;top:-140px;left:-120px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle, rgba(0,168,132,0.22), rgba(0,168,132,0) 70%);filter:blur(8px);animation:floaty 13s ease-in-out infinite"></div>
+  <div style="position:absolute;bottom:-160px;right:-120px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle, rgba(37,211,102,0.18), rgba(37,211,102,0) 70%);filter:blur(8px);animation:floaty2 16s ease-in-out infinite"></div>
+</div>
+
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center">
+
+  <!-- CAPTION OVERLAY -->
+  <div style="{{ captionStyle }}">
+    <div style="font-weight:700;font-size:10px;letter-spacing:1.6px;color:#00a884;text-transform:uppercase;display:flex;align-items:center;gap:7px;justify-content:center">
+      <span style="width:7px;height:7px;border-radius:50%;background:#25d366;animation:pulsedot 1.6s ease-in-out infinite"></span>
+      Always on WhatsApp
+    </div>
+    <div style="font-weight:800;font-size:19px;line-height:1.18;color:#0b3328;letter-spacing:-0.2px">{{ captionTitle }}</div>
+    <div style="font-weight:500;font-size:12.5px;line-height:1.3;color:#5a7268">{{ captionSub }}</div>
+  </div>
+
+  <!-- PHONE -->
+  <div style="{{ phoneWrapStyle }}">
+    <div style="{{ phoneInnerStyle }}">
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#000;border-radius:42px;overflow:hidden">
+
+        <!-- status bar -->
+        <div style="height:30px;background:#008069;display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#fff;flex:none">
+          <span style="font-size:12.5px;font-weight:700">{{ clockText }}</span>
+          <span style="display:flex;align-items:center;gap:5px">
+            <svg width="17" height="11" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4" width="3" height="8" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 11.2 1 4.2C2.9 2.4 5.3 1.4 8 1.4s5.1 1 7 2.8L8 11.2z" opacity="0.95"/></svg>
+            <svg width="24" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="#fff" opacity="0.7"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#fff"/><rect x="24" y="3.5" width="2" height="5" rx="1" fill="#fff" opacity="0.7"/></svg>
+          </span>
+        </div>
+
+        <!-- header -->
+        <div style="height:56px;background:#008069;display:flex;align-items:center;padding:0 12px;gap:10px;color:#fff;flex:none;box-shadow:0 1px 4px rgba(0,0,0,0.12);z-index:2">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#25d366,#0a8d54);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,0.25)">B</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.2">
+            <span style="font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Bangalore Ecommerce</span>
+            <span style="font-size:12px;color:rgba(255,255,255,0.85);font-weight:500">{{ headerStatus }}</span>
+          </div>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="#fff" style="opacity:.95"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" style="opacity:.95"><path d="M20 15.5c-1.2 0-2.5-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2a15.1 15.1 0 0 1-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1C8.7 6.5 8.5 5.2 8.5 4c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" style="opacity:.95"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
+        </div>
+
+        <!-- chat area -->
+        <div style="flex:1;position:relative;overflow:hidden;background-color:#e9e2d9;background-image:radial-gradient(rgba(60,80,60,0.04) 1.1px, transparent 1.1px);background-size:18px 18px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px 9px 8px">
+          <div style="{{ chatListStyle }}">{{ chatChildren }}</div>
+        </div>
+
+        <!-- input bar -->
+        <div style="height:52px;background:#f0f2f5;display:flex;align-items:center;gap:8px;padding:0 9px;flex:none">
+          <div style="flex:1;height:38px;background:#fff;border-radius:20px;display:flex;align-items:center;padding:0 12px;gap:9px;box-shadow:0 1px 1px rgba(0,0,0,0.05)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4 4 0 0 0 7 0" stroke-linecap="round"/><circle cx="9" cy="10" r="1" fill="#8696a0" stroke="none"/><circle cx="15" cy="10" r="1" fill="#8696a0" stroke="none"/></svg>
+            <span style="flex:1;color:#8696a0;font-size:14px">Message</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.05 12.2 20.3a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.6 3.6 0 1 1 5.1 5.1l-9.2 9.2a1.8 1.8 0 0 1-2.5-2.5l8.5-8.5"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="13" cy="12.5" r="3.2"/></svg>
+          </div>
+          <div style="width:42px;height:42px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,168,132,0.4);flex:none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/><path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z" opacity="0.9"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO: old vs new -->
+  <div style="{{ introStyle }}">
+    <div style="font-weight:800;font-size:24px;letter-spacing:-0.4px;color:#0b3328;margin-bottom:6px;text-align:center">The difference is instant.</div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px;max-width:740px">
+      <div style="{{ introBeforeStyle }}">
+        <div style="font-weight:700;font-size:10px;letter-spacing:1.4px;color:#b0455a;text-transform:uppercase">The old way</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+          <div style="width:44px;height:44px;border-radius:50%;background:#fbe8ec;display:flex;align-items:center;justify-content:center;flex:none">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#c2566c"><path d="M20 15.5c-1.2 0-2.5-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2a15.1 15.1 0 0 1-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1C8.7 6.5 8.5 5.2 8.5 4c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1z"/></svg>
+          </div>
+          <div style="line-height:1.25">
+            <div style="font-weight:700;font-size:16px;color:#33414b">On hold…</div>
+            <div style="font-size:12.5px;color:#8a96a0">Please stay on the line</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;align-items:baseline;gap:8px">
+          <span style="font-variant-numeric:tabular-nums;font-weight:800;font-size:30px;color:#c2566c;letter-spacing:0.5px">{{ introTimer }}</span>
+          <span style="font-size:12px;color:#8a96a0;font-weight:600">min waiting</span>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:5px">
+          <span style="width:7px;height:7px;border-radius:50%;background:#d3aab2;animation:typingdot 1.1s infinite"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#d3aab2;animation:typingdot 1.1s .2s infinite"></span>
+          <span style="width:7px;height:7px;border-radius:50%;background:#d3aab2;animation:typingdot 1.1s .4s infinite"></span>
+        </div>
+      </div>
+
+      <div style="{{ introVsStyle }}">VS</div>
+
+      <div style="{{ introAfterStyle }}">
+        <div style="font-weight:700;font-size:10px;letter-spacing:1.4px;color:#00a884;text-transform:uppercase">The new way</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+          <div style="align-self:flex-end;background:#d9fdd3;border-radius:13px 13px 4px 13px;padding:7px 11px;font-size:13px;color:#0b1f17;max-width:80%">Where's my order?</div>
+          <div style="align-self:flex-start;background:#fff;border-radius:13px 13px 13px 4px;padding:7px 11px;font-size:13px;color:#0b1f17;max-width:88%;box-shadow:0 1px 1px rgba(0,0,0,0.08)">Out for delivery — arrives tomorrow by 6 PM 🚚</div>
+        </div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:9px">
+          <div style="{{ introCheckStyle }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <div style="line-height:1.2">
+            <div style="font-weight:800;font-size:17px;color:#0b3328">Replied in 2 seconds</div>
+            <div style="font-size:12px;color:#5a7268;font-weight:500">No app switch. No waiting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTRO -->
+  <div style="{{ outroStyle }}">
+    <div style="{{ outroInnerStyle }}">
+      <div style="width:66px;height:66px;border-radius:20px;background:linear-gradient(135deg,#25d366,#008069);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px;color:#fff;box-shadow:0 12px 30px rgba(0,128,105,0.35);margin:0 auto">B</div>
+      <div style="margin-top:16px;font-weight:600;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#00a884">Bangalore Ecommerce</div>
+      <div style="margin-top:10px;font-weight:800;font-size:32px;line-height:1.16;color:#0b2a20;max-width:540px;letter-spacing:-0.6px;text-wrap:balance">Your store, open and helpful 24/7.</div>
+      <div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:9px;justify-content:center">
+        <span style="background:#dcfae9;color:#067a52;font-weight:600;font-size:12.5px;padding:7px 14px;border-radius:20px">⚡ Instant answers</span>
+        <span style="background:#dcfae9;color:#067a52;font-weight:600;font-size:12.5px;padding:7px 14px;border-radius:20px">🗣️ Your language</span>
+        <span style="background:#dcfae9;color:#067a52;font-weight:600;font-size:12.5px;padding:7px 14px;border-radius:20px">💬 Real humans</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- progress -->
+<div style="position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(11,50,40,0.07);z-index:20">
+  <div style="{{ progressStyle }}"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { now: 0, m: null };
+
+  // timeline boundaries (seconds)
+  TL = {
+    introEnd: 4.2,
+    m1: [4.2, 10.6], m2: [10.6, 16.2], m3: [16.2, 22.8], m4: [22.8, 29.6],
+    outro: [29.6, 33.8], loop: 33.8
+  };
+
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eoCubic(x){ return 1 - Math.pow(1-x,3); }
+  eoBack(x){ const c1=1.70158, c3=c1+1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); }
+
+  componentDidMount(){
+    this.setMetrics();
+    this._onR = () => this.setMetrics();
+    window.addEventListener('resize', this._onR);
+    let saved = 0;
+    try { saved = parseFloat(localStorage.getItem('wa_showcase_pos')) || 0; } catch(e){}
+    if (!isFinite(saved) || saved < 0 || saved > this.TL.loop) saved = 0.3;
+    this.t0 = performance.now() - saved * 1000;
+    this._lastSave = saved;
+    const tick = () => {
+      const now = ((performance.now() - this.t0) / 1000) % this.TL.loop;
+      this.setState({ now });
+      if (Math.abs(now - this._lastSave) > 0.5) {
+        this._lastSave = now;
+        try { localStorage.setItem('wa_showcase_pos', String(now)); } catch(e){}
+      }
+      this._raf = requestAnimationFrame(tick);
+    };
+    this._raf = requestAnimationFrame(tick);
+  }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize', this._onR); }
+
+  setMetrics(){
+    const H = window.innerHeight, W = window.innerWidth;
+    const scale = Math.min((H*0.72)/740, (W*0.92)/360, 1.18);
+    const phoneH = 740*scale;
+    const captionTop = Math.max(12, H/2 - phoneH/2 - 92);
+    const captionMaxW = Math.min(W*0.88, 440);
+    this.setState({ m: { scale, captionTop, captionMaxW, H, W } });
+  }
+
+  // ---------- message renderers ----------
+  entrance(localT, at){
+    const r = this.clamp((localT-at)/0.36, 0, 1);
+    const op = this.clamp((localT-at)/0.2, 0, 1);
+    const sc = 0.82 + 0.18*this.eoBack(r);
+    const ty = (1-this.eoCubic(r))*9;
+    return { opacity: op, transform: `translateY(${ty}px) scale(${sc})` };
+  }
+
+  bubbleWrap(side, en, children, key){
+    const h = React.createElement;
+    return h('div', { key, style: {
+      display:'flex', justifyContent: side==='user'?'flex-end':'flex-start',
+      padding:'2px 1px', ...en, transformOrigin: side==='user'?'bottom right':'bottom left'
+    }}, children);
+  }
+
+  textBubble(m, en, key){
+    const h = React.createElement;
+    const user = m.side==='user';
+    const kn = m.lang==='kn';
+    const bubble = h('div', { style: {
+      maxWidth:'80%', padding:'7px 10px 5px',
+      background: m.kind==='confirm' ? '#dff5e6' : (user?'#d9fdd3':'#fff'),
+      borderRadius: user?'14px 14px 4px 14px':'14px 14px 14px 4px',
+      boxShadow:'0 1px 1px rgba(0,0,0,0.1)', position:'relative'
+    }},
+      h('div', { style:{ fontSize: kn?'14px':'14.5px', lineHeight:1.36, color:'#0b1f17',
+        fontFamily: kn ? "'Noto Sans Kannada','Plus Jakarta Sans',sans-serif" : "'Plus Jakarta Sans',sans-serif" }}, m.text),
+      h('div', { style:{ display:'flex', alignItems:'center', justifyContent:'flex-end', gap:'3px', marginTop:'1px' }},
+        h('span', { style:{ fontSize:'10px', color:'#667781', fontWeight:500 }}, m.time),
+        user ? h('span', { style:{ fontSize:'11px', color:'#53bdeb', letterSpacing:'-2px', marginLeft:'2px' }}, '✓✓') : null
+      )
+    );
+    return this.bubbleWrap(m.side, en, bubble, key);
+  }
+
+  typing(key){
+    const h = React.createElement;
+    const dot = (d) => h('span', { style:{ width:'7px', height:'7px', borderRadius:'50%', background:'#9aa6ad', display:'inline-block', animation:`typingdot 1.1s ${d}s infinite` }});
+    return h('div', { key, style:{ display:'flex', justifyContent:'flex-start', padding:'2px 1px' }},
+      h('div', { style:{ background:'#fff', borderRadius:'14px 14px 14px 4px', padding:'10px 12px', display:'flex', gap:'4px', alignItems:'center', boxShadow:'0 1px 1px rgba(0,0,0,0.1)' }},
+        dot(0), dot(0.2), dot(0.4))
+    );
+  }
+
+  trackingCard(m, localT, en, key){
+    const h = React.createElement;
+    const fill = this.clamp((localT-(m.at+0.25))/0.9, 0, 1);
+    const steps = ['Packed','Shipped','Out for delivery','Delivered'];
+    const activeIdx = 2;
+    const node = (i) => {
+      const done = i < activeIdx;
+      const active = i === activeIdx;
+      const reached = i <= activeIdx ? this.clamp(fill*3 - i, 0, 1) : 0;
+      const on = reached > 0.5;
+      return h('div', { key:i, style:{ display:'flex', flexDirection:'column', alignItems:'center', flex:1, position:'relative' }},
+        h('div', { style:{ width: active?'16px':'12px', height: active?'16px':'12px', borderRadius:'50%',
+          background: on?'#00a884':'#d6dcd9', boxShadow: active&&on?'0 0 0 4px rgba(0,168,132,0.18)':'none',
+          transition:'none', zIndex:2 }}),
+        h('div', { style:{ fontSize:'8.5px', fontWeight: active?700:600, color: on?'#0b3328':'#9aa6ad', marginTop:'5px', textAlign:'center', lineHeight:1.1, maxWidth:'52px' }}, steps[i])
+      );
+    };
+    const bubble = h('div', { style:{ width:'248px', background:'#fff', borderRadius:'12px 12px 12px 4px', padding:'12px', boxShadow:'0 1px 2px rgba(0,0,0,0.12)' }},
+      h('div', { style:{ display:'flex', alignItems:'center', gap:'9px' }},
+        h('div', { style:{ width:'38px', height:'38px', borderRadius:'10px', background:'linear-gradient(135deg,#25d366,#0a8d54)', display:'flex', alignItems:'center', justifyContent:'center', flex:'none' }},
+          h('span', { style:{ fontSize:'19px' }}, '🚚')),
+        h('div', { style:{ lineHeight:1.25 }},
+          h('div', { style:{ fontSize:'13.5px', fontWeight:700, color:'#0b1f17' }}, 'Out for delivery'),
+          h('div', { style:{ fontSize:'11px', color:'#667781', fontWeight:500 }}, 'Order #BLR-2371'))),
+      h('div', { style:{ position:'relative', margin:'16px 6px 4px' }},
+        h('div', { style:{ position:'absolute', top:'6px', left:'8px', right:'8px', height:'3px', background:'#e3e7e4', borderRadius:'2px' }}),
+        h('div', { style:{ position:'absolute', top:'6px', left:'8px', height:'3px', background:'#00a884', borderRadius:'2px', width:`calc(${this.clamp(fill,0,1)*100}% - ${16*this.clamp(fill,0,1)}px)` }}),
+        h('div', { style:{ display:'flex', justifyContent:'space-between', position:'relative' }}, steps.map((s,i)=>node(i)))),
+      h('div', { style:{ marginTop:'12px', background:'#eafaf1', borderRadius:'9px', padding:'8px 10px', display:'flex', alignItems:'center', gap:'7px' }},
+        h('span', { style:{ fontSize:'14px' }}, '📅'),
+        h('div', { style:{ lineHeight:1.2 }},
+          h('span', { style:{ fontSize:'12.5px', fontWeight:700, color:'#067a52' }}, 'Arriving tomorrow'),
+          h('span', { style:{ fontSize:'12.5px', color:'#067a52', fontWeight:500 }}, ' · by 6:00 PM')))
+    );
+    return this.bubbleWrap('bot', en, bubble, key);
+  }
+
+  quickReturn(m, localT, en, key){
+    const h = React.createElement;
+    const pressed = localT >= m.pressAt;
+    const dip = Math.max(0, 1 - Math.abs(localT-m.pressAt)/0.16);
+    const btnScale = 1 - 0.05*dip;
+    const ripple = this.clamp((localT-m.pressAt)/0.45, 0, 1);
+    const btn = h('div', { style:{ position:'relative', overflow:'hidden', marginTop:'10px', height:'36px', borderRadius:'9px',
+      border: pressed?'1.5px solid #00a884':'1.5px solid #00a884',
+      background: pressed?'#00a884':'#fff', color: pressed?'#fff':'#067a52',
+      display:'flex', alignItems:'center', justifyContent:'center', gap:'6px',
+      fontWeight:700, fontSize:'13.5px', transform:`scale(${btnScale})`, transition:'none' }},
+      ripple>0 && ripple<1 ? h('span', { style:{ position:'absolute', width:'200px', height:'200px', borderRadius:'50%', background:'rgba(255,255,255,0.4)', transform:`scale(${ripple})`, opacity:1-ripple }}) : null,
+      h('span', null, pressed ? '✓ ' : '↩ '),
+      h('span', null, pressed ? 'Return requested' : 'Start return')
+    );
+    const bubble = h('div', { style:{ width:'238px', background:'#fff', borderRadius:'12px 12px 12px 4px', padding:'11px', boxShadow:'0 1px 2px rgba(0,0,0,0.12)' }},
+      h('div', { style:{ display:'flex', alignItems:'center', gap:'10px' }},
+        h('div', { style:{ width:'46px', height:'46px', borderRadius:'10px', background:'linear-gradient(135deg,#fde7c7,#f6c98a)', display:'flex', alignItems:'center', justifyContent:'center', flex:'none' }},
+          h('span', { style:{ fontSize:'24px' }}, '👟')),
+        h('div', { style:{ lineHeight:1.3 }},
+          h('div', { style:{ fontSize:'13.5px', fontWeight:700, color:'#0b1f17' }}, 'Daily Run Shoes'),
+          h('div', { style:{ fontSize:'11.5px', color:'#667781', fontWeight:500 }}, 'Size 8 · ₹2,499'))),
+      btn
+    );
+    return this.bubbleWrap('bot', en, bubble, key);
+  }
+
+  humanBtn(m, localT, en, key){
+    const h = React.createElement;
+    const pressed = localT >= m.pressAt;
+    const dip = Math.max(0, 1 - Math.abs(localT-m.pressAt)/0.16);
+    const btn = h('div', { style:{ marginTop:'9px', height:'36px', borderRadius:'9px',
+      border:'1.5px solid #00a884', background: pressed?'#00a884':'#f4fbf7', color: pressed?'#fff':'#067a52',
+      display:'flex', alignItems:'center', justifyContent:'center', gap:'7px',
+      fontWeight:700, fontSize:'13.5px', transform:`scale(${1-0.05*dip})`, transition:'none' }},
+      h('span', { style:{ fontSize:'15px' }}, '👤'),
+      h('span', null, pressed ? 'Connecting you…' : 'Talk to a human'));
+    const bubble = h('div', { style:{ width:'220px', background:'#fff', borderRadius:'12px 12px 12px 4px', padding:'11px', boxShadow:'0 1px 2px rgba(0,0,0,0.12)' }},
+      h('div', { style:{ fontSize:'13px', color:'#445', fontWeight:500, lineHeight:1.35 }}, 'Prefer a personal touch?'),
+      btn);
+    return this.bubbleWrap('bot', en, bubble, key);
+  }
+
+  products(m, localT, key){
+    const h = React.createElement;
+    const items = [
+      { e:'🕯️', n:'Aroma Candle Set', p:'₹1,299', bg:'linear-gradient(135deg,#ffe1d6,#ffc4a8)' },
+      { e:'🎧', n:'Wireless Earbuds', p:'₹1,899', bg:'linear-gradient(135deg,#d6ecff,#aacdfb)' },
+      { e:'👛', n:'Leather Wallet', p:'₹1,499', bg:'linear-gradient(135deg,#e7e1d2,#c9bfa3)' }
+    ];
+    const card = (it, i) => {
+      const en = this.entrance(localT, m.at + i*0.16);
+      return h('div', { key:i, style:{ width:'104px', flex:'none', background:'#fff', borderRadius:'12px', overflow:'hidden', boxShadow:'0 1px 3px rgba(0,0,0,0.12)', ...en, transformOrigin:'center bottom' }},
+        h('div', { style:{ height:'70px', background:it.bg, display:'flex', alignItems:'center', justifyContent:'center' }},
+          h('span', { style:{ fontSize:'34px' }}, it.e)),
+        h('div', { style:{ padding:'7px 8px 8px' }},
+          h('div', { style:{ fontSize:'11px', fontWeight:600, color:'#0b1f17', lineHeight:1.25, height:'27px', overflow:'hidden' }}, it.n),
+          h('div', { style:{ fontSize:'13.5px', fontWeight:800, color:'#0b3328', marginTop:'2px' }}, it.p),
+          h('div', { style:{ marginTop:'6px', height:'27px', borderRadius:'7px', background:'#00a884', color:'#fff', fontSize:'12px', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' }}, 'Buy')))
+    };
+    return h('div', { key, style:{ display:'flex', justifyContent:'flex-start', padding:'4px 1px' }},
+      h('div', { style:{ display:'flex', gap:'8px' }}, items.map((it,i)=>card(it,i))));
+  }
+
+  // ---------- moment script ----------
+  script(id){
+    const S = {
+      m1: { clock:'11:02 PM', msgs:[
+        { side:'user', kind:'text', text:"Hey, where's my order? 📦", at:0.3, time:'11:02 PM' },
+        { side:'bot', kind:'text', text:"Hi Priya! 👋 Great news — it's already out for delivery.", at:2.0, tb:1.0, time:'11:02 PM' },
+        { side:'bot', kind:'tracking', at:3.4, tb:0.5, time:'11:02 PM' }
+      ]},
+      m2: { clock:'2:14 PM', msgs:[
+        { side:'user', kind:'text', text:"I'd like to return these shoes 👟", at:0.3, time:'2:14 PM' },
+        { side:'bot', kind:'text', text:"Of course! I can set that up right now.", at:1.9, tb:0.9, time:'2:14 PM' },
+        { side:'bot', kind:'quick', at:2.7, tb:0.4, pressAt:3.9, time:'2:14 PM' },
+        { side:'bot', kind:'confirm', text:"✅ Return started! Free pickup tomorrow, 10 AM–12 PM.", at:4.6, time:'2:15 PM' }
+      ]},
+      m3: { clock:'5:48 PM', msgs:[
+        { side:'user', kind:'text', text:"Suggest a gift under ₹2000 🎁", at:0.3, time:'5:48 PM' },
+        { side:'bot', kind:'text', text:"Happy to! Here are 3 favourites 🎉", at:2.0, tb:1.0, time:'5:48 PM' },
+        { side:'bot', kind:'products', at:2.6, time:'5:48 PM' }
+      ]},
+      m4: { clock:'7:30 PM', msgs:[
+        { side:'user', kind:'text', lang:'kn', text:"ನನ್ನ ಆರ್ಡರ್ ಯಾವಾಗ ಬರುತ್ತದೆ?", at:0.3, time:'7:30 PM' },
+        { side:'bot', kind:'text', lang:'kn', text:"ನಮಸ್ಕಾರ! 😊 ನಿಮ್ಮ ಆರ್ಡರ್ ನಾಳೆ ಸಂಜೆ 6 ಗಂಟೆಗೆ ತಲುಪುತ್ತದೆ.", at:1.9, tb:0.9, time:'7:30 PM' },
+        { side:'bot', kind:'text', text:"Anything else I can help with? 🙂", at:3.5, tb:0.7, time:'7:30 PM' },
+        { side:'bot', kind:'humanbtn', at:4.1, pressAt:5.1, time:'7:30 PM' },
+        { side:'bot', kind:'confirm', text:"Connecting you to Anitha from our team 💬", at:5.8, time:'7:31 PM' }
+      ]}
+    };
+    return S[id];
+  }
+
+  caption(id, t, dur){
+    const segs = {
+      m1: [{ s:3.4, e:dur, t:'Instant answers, 24/7', sub:"It's 11 PM — and still no waiting." }],
+      m2: [{ s:2.7, e:dur, t:'Returns in seconds', sub:'No calls. No hold music.' }],
+      m3: [{ s:2.7, e:dur, t:'Personal recommendations', sub:'Picked for your budget, instantly.' }],
+      m4: [{ s:2.2, e:4.2, t:'Speaks your language', sub:'Replies in Kannada, Hindi, English…' },
+           { s:4.4, e:dur, t:'A real person, whenever you want', sub:'Seamless handoff to a human.' }]
+    }[id] || [];
+    for (const sg of segs){
+      if (t >= sg.s && t <= sg.e){
+        const op = Math.min(this.clamp((t-sg.s)/0.4,0,1), this.clamp((sg.e-t)/0.35,0,1));
+        return { title:sg.t, sub:sg.sub, op };
+      }
+    }
+    return { title:'', sub:'', op:0 };
+  }
+
+  buildMoment(id, t){
+    const sc = this.script(id);
+    const out = [];
+    out.push(React.createElement('div', { key:'today', style:{ alignSelf:'center', background:'#fff', color:'#54656f', fontSize:'10.5px', fontWeight:700, padding:'4px 11px', borderRadius:'9px', margin:'2px 0 5px', boxShadow:'0 1px 1px rgba(0,0,0,0.08)' }}, 'TODAY'));
+    let typingFor = null;
+    for (const m of sc.msgs){
+      if (m.tb && t > m.at - m.tb && t < m.at){ typingFor = m; }
+      if (t < m.at) continue;
+      const en = this.entrance(t, m.at);
+      const key = m.kind+'-'+m.at;
+      if (m.kind==='text' || m.kind==='confirm') out.push(this.textBubble(m, en, key));
+      else if (m.kind==='tracking') out.push(this.trackingCard(m, t, en, key));
+      else if (m.kind==='quick') out.push(this.quickReturn(m, t, en, key));
+      else if (m.kind==='humanbtn') out.push(this.humanBtn(m, t, en, key));
+      else if (m.kind==='products') out.push(this.products(m, t, key));
+    }
+    if (typingFor) out.push(this.typing('typing'));
+    return { children: out, typing: !!typingFor, clock: sc.clock };
+  }
+
+  fmtTimer(t){
+    const total = 1492 + Math.floor(t*9);
+    const mm = Math.floor(total/60), ss = total%60;
+    return `${mm}:${ss<10?'0':''}${ss}`;
+  }
+
+  renderVals(){
+    const TL = this.TL;
+    const now = this.state.now || 0;
+    const m = this.state.m || { scale: Math.min((window.innerHeight*0.78)/740,(window.innerWidth*0.92)/360,1.22), captionTop:40, captionMaxW:420, H:window.innerHeight, W:window.innerWidth };
+    const scale = m.scale;
+
+    // intro / outro opacity
+    const introOp = now < TL.introEnd ? Math.min(this.clamp(now/0.4,0,1), this.clamp((TL.introEnd-now)/0.4,0,1)) : 0;
+    const outroOp = now >= TL.outro[0] ? Math.min(this.clamp((now-TL.outro[0])/0.5,0,1), this.clamp((TL.loop-now)/0.4,0,1)) : 0;
+
+    // phone opacity
+    let phoneOp = 0;
+    if (now >= TL.m1[0]-0.4 && now < TL.m1[0]) phoneOp = this.clamp((now-(TL.m1[0]-0.4))/0.4,0,1);
+    else if (now >= TL.m1[0] && now < TL.outro[0]) phoneOp = 1;
+    else if (now >= TL.outro[0] && now < TL.outro[0]+0.4) phoneOp = 1 - this.clamp((now-TL.outro[0])/0.4,0,1);
+
+    // current moment
+    const order = [['m1',TL.m1],['m2',TL.m2],['m3',TL.m3],['m4',TL.m4]];
+    let momentFade = 0, chatChildren = [], clock = '11:02 PM', typing = false, cap = { title:'', sub:'', op:0 };
+    for (const [id, rng] of order){
+      if (now >= rng[0] && now < rng[1]){
+        const t = now - rng[0], dur = rng[1]-rng[0];
+        momentFade = Math.min(this.clamp(t/0.4,0,1), this.clamp((dur-t)/0.4,0,1));
+        const built = this.buildMoment(id, t);
+        chatChildren = built.children; typing = built.typing; clock = built.clock;
+        cap = this.caption(id, t, dur);
+        break;
+      }
+    }
+
+    // intro inner animations (local = now)
+    const it = now;
+    const ibEn = this.entrance(it, 0.15);
+    const iaEn = this.entrance(it, 1.15);
+    const ckP = this.clamp((it-1.85)/0.4, 0, 1);
+    const vsP = this.clamp((it-0.9)/0.4, 0, 1);
+
+    const cardBase = { background:'#fff', borderRadius:'22px', padding:'20px', width:'238px', boxShadow:'0 18px 40px rgba(20,50,40,0.14)' };
+
+    return {
+      clockText: clock,
+      headerStatus: typing ? 'typing…' : 'online',
+      chatListStyle: { display:'flex', flexDirection:'column', gap:'2px', width:'100%', opacity: momentFade },
+      chatChildren,
+
+      captionTitle: cap.title,
+      captionSub: cap.sub,
+      captionStyle: {
+        position:'absolute', top: m.captionTop+'px', left:'50%',
+        transform:`translateX(-50%) translateY(${(1-cap.op)*-10}px)`,
+        maxWidth: m.captionMaxW+'px', width:'max-content',
+        background:'rgba(255,255,255,0.94)', backdropFilter:'blur(6px)',
+        borderRadius:'18px', padding:'13px 22px', textAlign:'center',
+        display:'flex', flexDirection:'column', gap:'4px', alignItems:'center',
+        boxShadow:'0 14px 36px rgba(15,50,38,0.16)', border:'1px solid rgba(255,255,255,0.7)',
+        opacity: cap.op, pointerEvents:'none', zIndex:8
+      },
+
+      phoneWrapStyle: {
+        width:(360*scale)+'px', height:(740*scale)+'px', position:'relative',
+        opacity: phoneOp, filter:'drop-shadow(0 34px 64px rgba(15,45,32,0.3))'
+      },
+      phoneInnerStyle: {
+        width:'360px', height:'740px', transform:`scale(${scale})`, transformOrigin:'0 0',
+        position:'absolute', top:0, left:0, borderRadius:'42px', background:'#0b141a',
+        boxShadow:'0 0 0 11px #0b141a, 0 0 0 12px #233138'
+      },
+
+      introStyle: {
+        position:'absolute', inset:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        padding:'24px', opacity: introOp, pointerEvents:'none', zIndex:12
+      },
+      introBeforeStyle: { ...cardBase, filter:'saturate(0.75)', ...ibEn, transformOrigin:'center' },
+      introAfterStyle: { ...cardBase, boxShadow:'0 22px 48px rgba(0,128,105,0.2)', ...iaEn, transformOrigin:'center' },
+      introVsStyle: {
+        width:'42px', height:'42px', borderRadius:'50%', background:'#0b3328', color:'#fff',
+        display:'flex', alignItems:'center', justifyContent:'center', fontWeight:800, fontSize:'13px',
+        flex:'none', opacity:vsP, transform:`scale(${0.6+0.4*this.eoBack(vsP)})`
+      },
+      introCheckStyle: {
+        width:'40px', height:'40px', borderRadius:'12px', background:'linear-gradient(135deg,#25d366,#00a884)',
+        display:'flex', alignItems:'center', justifyContent:'center', flex:'none',
+        transform:`scale(${0.4+0.6*this.eoBack(ckP)})`, opacity:ckP, boxShadow:'0 6px 16px rgba(0,168,132,0.4)'
+      },
+      introTimer: this.fmtTimer(it),
+
+      outroStyle: { position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', padding:'24px', opacity: outroOp, pointerEvents:'none', zIndex:12 },
+      outroInnerStyle: { textAlign:'center', transform:`scale(${0.92+0.08*this.eoCubic(this.clamp((now-TL.outro[0])/0.6,0,1))})` },
+
+      progressStyle: { width:(now/TL.loop*100)+'%', height:'100%', background:'linear-gradient(90deg,#00a884,#25d366)', borderRadius:'0 3px 3px 0' }
+    };
+  }
+}
+</script>
+</body>
+</html>

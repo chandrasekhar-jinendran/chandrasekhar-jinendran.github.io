@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building human-like voice agents with Retell AI — Chandrasekhar Jinendran</title>
+  <meta name="description" content="A practical guide to shipping real-time voice agents on Retell AI: system and meta prompting, webhook tool calls, and latency tuning for natural conversation.">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/article.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="Building human-like voice agents with Retell AI">
+  <meta property="og:description" content="System & meta prompting, webhooks, and the latency tricks that make a voice bot feel real.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/article.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Building human-like voice agents with Retell AI",
+        "description": "A practical guide to shipping real-time voice agents on Retell AI: system and meta prompting, webhook tool calls, and latency tuning for natural conversation.",
+        "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist", "url": "https://chandrasekharjinendran.com" },
+        "datePublished": "2026-06-10",
+        "dateModified": "2026-06-12",
+        "mainEntityOfPage": "https://chandrasekharjinendran.com/article.html",
+        "keywords": "Voice AI, Retell AI, conversational agents, system prompting, webhooks, real-time AI",
+        "articleSection": "Voice AI",
+        "wordCount": 1100
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What is Retell AI used for?", "acceptedAnswer": { "@type": "Answer", "text": "Retell AI is a platform for building real-time, human-like conversational voice agents. It handles speech-to-text, the language model turn, and text-to-speech in a low-latency loop, so you focus on behaviour and tool calls instead of audio plumbing." } },
+          { "@type": "Question", "name": "How do you make a voice agent sound natural?", "acceptedAnswer": { "@type": "Answer", "text": "Natural dialogue comes from a tight system prompt that defines persona and boundaries, meta prompts that shape turn-taking and back-channelling, short responses, and keeping end-to-end latency under roughly 800ms so the caller never waits awkwardly." } },
+          { "@type": "Question", "name": "Can a voice agent take real actions?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. By wiring the agent to webhooks and APIs, it can look up records, book appointments, update a CRM or trigger automations mid-conversation, then speak the result back to the caller." } }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+  <!-- reading progress -->
+  <div style="position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:transparent;"><div id="cj-progress" style="height:100%;width:0;background:var(--green-500);transition:width .1s linear;"></div></div>
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" aria-label="Chandrasekhar Jinendran — home" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav aria-label="Primary" style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <a href="blog.html" class="cj-link" style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</a>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <!-- ARTICLE HEADER -->
+  <article>
+  <header style="max-width:760px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);">
+      <a href="blog.html" style="color:var(--green-600);font-weight:600;">Blog</a><span>/</span><span>Voice AI</span>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">Building human-like voice agents with Retell AI</h1>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:14px;color:var(--text-body);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(150deg,var(--green-600),var(--green-900));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;font-size:15px;">CJ</div>
+      <div><div style="font-weight:600;color:var(--green-800);">Chandrasekhar Jinendran</div><div style="font-size:13px;color:var(--text-muted);">AI Specialist · 9 min read · Jun 12, 2026</div></div>
+    </div>
+  </header>
+
+  <!-- BODY GRID: content + TOC -->
+  <div class="cj-article-grid" style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,52px) clamp(20px,5vw,32px) 0;display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:0;">
+    <!-- TOC -->
+    <aside style="position:relative;">
+      <nav class="cj-toc" style="position:sticky;top:96px;padding-right:28px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">On this page</div>
+        <a href="#why">Why voice is different</a>
+        <a href="#arch">The architecture</a>
+        <a href="#prompting">System &amp; meta prompting</a>
+        <a href="#tools">Wiring tools via webhooks</a>
+        <a href="#latency">Latency: keeping it human</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div>
+      <!-- TL;DR -->
+      <div style="background:var(--green-100);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px;">TL;DR</div>
+        <p style="font-size:16px;line-height:1.65;color:var(--ink-700);margin:0;">A production voice agent is three things working together: a <strong>tight system prompt</strong> that fixes persona and boundaries, <strong>tool calls over webhooks</strong> so the agent can actually do something, and <strong>sub-800ms latency</strong> so the conversation never feels like talking to a machine. Retell AI handles the audio loop; you own behaviour.</p>
+      </div>
+
+      <div class="cj-prose">
+        <p>Most "AI voice" demos fall apart the moment a real person talks to them. They interrupt, they ramble, they pause half a second too long, and the illusion breaks. Shipping a voice agent that holds up in production is less about the model and more about <strong>discipline around the conversation loop</strong>.</p>
+        <p>Here is the approach I use on Retell AI to build agents that feel human — and actually get work done.</p>
+
+        <h2 id="why">Why voice is different</h2>
+        <p>Text agents are forgiving. A user will wait, re-read, and scroll back. In voice, there is no scrollback and no patience: every pause is judged, every over-long answer is interrupted, and the caller forms an opinion in the first two seconds.</p>
+        <ul>
+          <li><strong>Turn-taking is the product.</strong> Knowing when to stop talking matters more than what you say.</li>
+          <li><strong>Brevity wins.</strong> A great voice answer is one or two sentences, then a question back.</li>
+          <li><strong>Latency is felt, not measured.</strong> Anything above a second reads as "the line went dead".</li>
+        </ul>
+
+        <h2 id="arch">The architecture</h2>
+        <p>Retell AI runs the real-time audio loop — speech-to-text, the model turn, and text-to-speech — while your logic lives in the prompt and in the webhook calls the agent makes mid-conversation. The shape is simple:</p>
+      </div>
+
+      <!-- FLOW DIAGRAM -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:clamp(20px,3vw,32px);margin:8px 0 28px;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:stretch;justify-content:space-between;gap:8px;flex-wrap:nowrap;font-family:var(--font-display);">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+            <div style="width:100%;aspect-ratio:1;max-width:64px;border-radius:16px;background:var(--green-100);display:flex;align-items:center;justify-content:center;color:var(--green-700);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+            <div style="font-size:12px;font-weight:700;color:var(--green-800);">Caller</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--green-400);font-size:20px;">&rarr;</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+            <div style="width:100%;aspect-ratio:1;max-width:64px;border-radius:16px;background:var(--green-600);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px;">Retell</div>
+            <div style="font-size:12px;font-weight:700;color:var(--green-800);">STT · TTS loop</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--green-400);font-size:20px;">&rarr;</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+            <div style="width:100%;aspect-ratio:1;max-width:64px;border-radius:16px;background:var(--green-800);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px;">LLM</div>
+            <div style="font-size:12px;font-weight:700;color:var(--green-800);">Claude + prompt</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--green-400);font-size:20px;">&rarr;</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+            <div style="width:100%;aspect-ratio:1;max-width:64px;border-radius:16px;background:#fff;border:1.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;color:var(--green-700);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg></div>
+            <div style="font-size:12px;font-weight:700;color:var(--green-800);">Webhooks &amp; APIs</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:18px;">Audio in, audio out — with real tool calls happening mid-turn.</div>
+      </div>
+
+      <div class="cj-prose">
+        <h2 id="prompting">System &amp; meta prompting</h2>
+        <p>The system prompt is where the agent's personality and guardrails live. Keep it concrete: who the agent is, what it can and cannot do, and exactly how it should sound. Then layer <strong>meta prompts</strong> — instructions about the conversation itself rather than its content.</p>
+        <ul>
+          <li><strong>Persona:</strong> one or two sentences. "You are Ava, the booking assistant for a dental clinic. Warm, brief, never robotic."</li>
+          <li><strong>Boundaries:</strong> what to refuse and how to escalate to a human.</li>
+          <li><strong>Style rules:</strong> "Reply in one or two sentences. End by asking one question. Never list more than three options aloud."</li>
+        </ul>
+        <p>Meta prompting handles the things text agents never worry about: when to back-channel ("mm-hm"), when to confirm before acting, and how to recover when the caller talks over the agent.</p>
+
+        <h2 id="tools">Wiring tools via webhooks</h2>
+        <p>A voice agent that can only talk is a glorified IVR. The value shows up when it can <em>act</em> — look up an order, book a slot, update a record — without leaving the call. On Retell, you expose these as functions the agent can call; each one hits a <code>webhook</code> that runs your logic and returns a short result the agent can speak back.</p>
+        <p>Two rules keep this reliable: make every tool <strong>idempotent</strong>, and always <strong>confirm out loud</strong> before a write ("I'll book Tuesday at 3 — is that right?"). It mirrors the same policy-layer thinking I use on MCP servers.</p>
+
+        <h2 id="latency">Latency: keeping it human</h2>
+        <p>The single biggest lever on "does this feel real" is end-to-end latency. Budget aggressively:</p>
+        <ul>
+          <li>Stream the model response instead of waiting for the full turn.</li>
+          <li>Keep tool calls fast — cache what you can, and fire long-running work asynchronously while the agent says "one moment".</li>
+          <li>Trim the prompt. Every extra token is latency you can hear.</li>
+        </ul>
+        <p>Get the loop under roughly <strong>800 milliseconds</strong> and people stop noticing the machine. That is the whole game.</p>
+      </div>
+
+      <!-- KEY TAKEAWAYS -->
+      <div style="background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-6);margin:36px 0;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--green-800);margin:0 0 14px;">Key takeaways</h2>
+        <ul style="margin:0;padding-left:20px;color:var(--ink-700);font-size:16px;line-height:1.7;">
+          <li>Voice rewards brevity and turn-taking over clever answers.</li>
+          <li>Persona + boundaries + style rules belong in a tight system prompt.</li>
+          <li>Webhook tool calls turn a talker into a doer — confirm before every write.</li>
+          <li>Sub-800ms latency is what makes an agent feel human.</li>
+        </ul>
+      </div>
+
+      <!-- FAQ -->
+      <section id="faq" class="cj-faq" style="margin:48px 0 0;scroll-margin-top:90px;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-0.02em;color:var(--green-800);margin:0 0 18px;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is Retell AI used for?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Retell AI is a platform for building real-time, human-like conversational voice agents. It handles speech-to-text, the language-model turn, and text-to-speech in a low-latency loop, so you focus on behaviour and tool calls instead of audio plumbing.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">How do you make a voice agent sound natural?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Natural dialogue comes from a tight system prompt that defines persona and boundaries, meta prompts that shape turn-taking, short responses, and keeping end-to-end latency under roughly 800ms so the caller never waits awkwardly.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Can a voice agent take real actions?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Yes. By wiring the agent to webhooks and APIs it can look up records, book appointments, update a CRM or trigger automations mid-conversation, then speak the result back to the caller.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- AUTHOR / CTA -->
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(150deg,var(--green-900),var(--green-950));border-radius:var(--radius-xl);padding:var(--space-7);margin:48px 0 0;color:var(--text-on-dark);">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;">CJ</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--font-display);font-weight:700;color:#fff;">Chandrasekhar Jinendran</div>
+          <div style="font-size:14px;color:var(--text-on-dark-muted);margin-top:4px;">I build voice agents, automations and AI MVPs that ship as real products.</div>
+        </div>
+        <a href="contact.html" class="ks-btn ks-btn--inverse" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--green-900);font-family:var(--font-display);font-weight:600;font-size:15px;padding:13px 24px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Work with me <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  </article>
+
+  <!-- RELATED -->
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,5vw,32px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">Related in this cluster</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+      <a href="article-meta-prompting.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Prompting</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">System &amp; meta prompting for reliable agents</h3>
+      </a>
+      <a href="article-mcp-servers.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">MCP</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Governed MCP servers: tools Claude can't misuse</h3>
+      </a>
+      <a href="article-ai-mvp.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Automation</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">From idea to deployed AI MVP in a weekend</h3>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

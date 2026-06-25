@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;width:100%;overflow:hidden;background:#08130d}
+    body{font-family:'DM Sans',system-ui,sans-serif}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 0%,#0f3024,#070f0a)">
+  <div style="{{ stageStyle }}">{{ scene }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:687}}">
+class Component extends DCLogic {
+  state = { now: 0, scale: 1 };
+  W = 1000; H = 687; LOOP = 10;
+  clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  eo(x){ return 1 - Math.pow(1 - this.clamp(x,0,1), 3); }
+  eob(x){ x=this.clamp(x,0,1); const c=1.70158,c3=c+1; return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2); }
+  componentDidMount(){ this.fit(); this._r=()=>this.fit(); window.addEventListener('resize',this._r); this.t0=performance.now();
+    const tick=()=>{ this.setState({ now:((performance.now()-this.t0)/1000)%this.LOOP }); this._raf=requestAnimationFrame(tick); }; this._raf=requestAnimationFrame(tick); }
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); window.removeEventListener('resize',this._r); }
+  fit(){ this.setState({ scale: Math.min(window.innerWidth/this.W, window.innerHeight/this.H) }); }
+
+  scene(){
+    const h=React.createElement, t=this.state.now;
+    const C={ acc:'#5eead4', green:'#2F9655', greenDk:'#15452A', sub:'#9fb6ab', mut:'#6f8a7d' };
+    const cx=500, cy=300, R=190;
+    const tools=[
+      { lab:'Email', ang:-90, ic:h('path',{d:'M3 7l9 6 9-6M3 7h18v10H3z',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinejoin:'round'}), at:1.0 },
+      { lab:'Calendar', ang:-30, ic:h('path',{d:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinejoin:'round',strokeLinecap:'round'}), at:1.6 },
+      { lab:'Voice', ang:30, ic:h('path',{d:'M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3zM6 11a6 6 0 0 0 12 0M12 17v3',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinecap:'round',strokeLinejoin:'round'}), at:2.2 },
+      { lab:'CRM', ang:90, ic:h('path',{d:'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3.3 2.7-5 6-5s6 1.7 6 5M17 8l4 4M21 8l-4 4',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinecap:'round',strokeLinejoin:'round'}), at:2.8 },
+      { lab:'Docs', ang:150, ic:h('path',{d:'M7 3h7l4 4v14H7zM14 3v4h4M9 12h7M9 16h7',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinejoin:'round',strokeLinecap:'round'}), at:3.4 },
+      { lab:'Tasks', ang:210, ic:h('path',{d:'M5 7l2 2 3-3M5 15l2 2 3-3M13 8h6M13 16h6',stroke:'#fff',strokeWidth:2,fill:'none',strokeLinecap:'round',strokeLinejoin:'round'}), at:4.0 },
+    ];
+    const allLit=t>4.9;
+    const summP=this.clamp((t-5.6)/0.7,0,1);
+    const pos=(ang)=>({ x:cx+R*Math.cos(ang*Math.PI/180), y:cy+R*Math.sin(ang*Math.PI/180) });
+    const spokes=tools.map((tl,i)=>{ const p=pos(tl.ang); const lit=t>tl.at||allLit; const grow=this.clamp((t-tl.at+0.3)/0.4,0,1);
+      return h('line',{key:i,x1:cx,y1:cy,x2:cx+(p.x-cx)*this.eo(grow),y2:cy+(p.y-cy)*this.eo(grow),stroke:lit?'rgba(94,234,212,0.55)':'rgba(255,255,255,0.08)',strokeWidth:2.5,strokeDasharray:'2 7',strokeLinecap:'round'}); });
+    // pulse traveling along a spoke (rotating which one)
+    const pulseIdx=Math.floor((t*1.6)%tools.length); const pulseP=(t*1.6)%1; const pp=pos(tools[pulseIdx].ang);
+    return h('div',{style:{position:'absolute',inset:0}},
+      h('div',{style:{position:'absolute',top:30,left:0,right:0,textAlign:'center'}},
+        h('div',{style:{fontSize:14,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',color:C.acc}},'AI Productivity Assistant'),
+        h('div',{style:{fontSize:15,color:C.sub,marginTop:4}},'One assistant. Your whole toolchain.')),
+      h('svg',{width:1000,height:600,style:{position:'absolute',top:0,left:0}},
+        spokes,
+        (t>0.6)?h('circle',{cx:pp.x,cy:pp.y,r:5,fill:C.acc,opacity:0.9}):null),
+      // tool nodes
+      tools.map((tl,i)=>{ const p=pos(tl.ang); const lit=t>tl.at||allLit; const en=this.clamp((t-tl.at)/0.4,0,1);
+        return h('div',{key:i,style:{position:'absolute',left:p.x,top:p.y,transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:7,opacity:0.4+0.6*this.clamp((t-tl.at+0.4)/0.4,0,1)}},
+          h('div',{style:{width:64,height:64,borderRadius:17,background:lit?`linear-gradient(135deg,${C.green},${C.greenDk})`:'rgba(255,255,255,0.06)',border:`1.5px solid ${lit?'rgba(94,234,212,0.45)':'rgba(255,255,255,0.1)'}`,display:'flex',alignItems:'center',justifyContent:'center',transform:`scale(${0.7+0.3*this.eob(en)})`,boxShadow:lit?'0 8px 20px rgba(47,150,85,0.35)':'none',transition:'none'}},
+            h('svg',{width:30,height:30,viewBox:'0 0 24 24'},tl.ic)),
+          h('span',{style:{fontSize:14,fontWeight:600,color:lit?'#fff':C.mut}},tl.lab)); }),
+      // center orb
+      h('div',{style:{position:'absolute',left:cx,top:cy,transform:'translate(-50%,-50%)'}},
+        h('div',{style:{width:96,height:96,borderRadius:'50%',background:`radial-gradient(circle at 35% 30%,${C.acc},${C.green} 60%,${C.greenDk})`,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:`0 0 ${30+Math.sin(t*3)*10}px rgba(94,234,212,0.5),0 14px 34px rgba(0,0,0,0.4)`}},
+          h('svg',{width:46,height:46,viewBox:'0 0 24 24',fill:'none',stroke:'#06281c',strokeWidth:2.2,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2'}),h('circle',{cx:12,cy:12,r:3.2})))),
+      // summary toast
+      allLit?h('div',{style:{position:'absolute',left:'50%',bottom:38,transform:`translateX(-50%) translateY(${(1-this.eo(summP))*16}px)`,opacity:summP,display:'flex',alignItems:'center',gap:12,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(94,234,212,0.3)',borderRadius:14,padding:'14px 22px',backdropFilter:'blur(6px)'}},
+        h('span',{style:{width:30,height:30,borderRadius:'50%',background:C.green,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}},
+          h('svg',{width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M5 13l4 4L19 7'}))),
+        h('span',{style:{fontSize:18,fontWeight:600,color:'#fff'}},'6 tools, 1 conversation — your day, handled.')):null
+    );
+  }
+  renderVals(){ return { scene:this.scene(), stageStyle:{ width:this.W+'px', height:this.H+'px', transform:`scale(${this.state.scale})`, transformOrigin:'center', background:'#0c2419', borderRadius:'18px', position:'relative', overflow:'hidden', flex:'none', boxShadow:'0 30px 70px rgba(0,0,0,0.45)' } }; }
+}
+</script>
+</body>
+</html>

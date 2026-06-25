@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Chandrasekhar Jinendran | Notes from the build</title>
+  <meta name="description" content="Practical, source-backed articles on voice AI, agentic systems, MCP, automation and applied generative AI — by AI Specialist Chandrasekhar Jinendran.">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/blog.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="Blog — Notes from the build">
+  <meta property="og:description" content="Articles on voice AI, agentic systems, MCP, automation and applied generative AI.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/blog.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Chandrasekhar Jinendran — Notes from the build",
+    "description": "Technical articles on Voice AI, agentic systems, MCP, automation and applied generative AI.",
+    "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist" },
+    "url": "https://chandrasekharjinendran.com/blog.html",
+    "blogPost": [
+      { "@type": "BlogPosting", "headline": "Building human-like voice agents with Retell AI", "about": "Voice AI", "author": "Chandrasekhar Jinendran", "url": "https://chandrasekharjinendran.com/article.html" },
+      { "@type": "BlogPosting", "headline": "Governed MCP servers: tools Claude can't misuse", "about": "Model Context Protocol", "author": "Chandrasekhar Jinendran", "url": "https://chandrasekharjinendran.com/article-mcp-servers.html" },
+      { "@type": "BlogPosting", "headline": "From idea to deployed AI MVP in a weekend", "about": "Automation", "author": "Chandrasekhar Jinendran", "url": "https://chandrasekharjinendran.com/article-ai-mvp.html" }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" aria-label="Chandrasekhar Jinendran — home" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav aria-label="Primary" style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <span style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</span>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <main>
+
+  <!-- HEADER -->
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px) clamp(20px,3vw,40px);">
+    <span style="display:inline-flex;align-items:center;gap:12px;font-size:13px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--green-600);"><span style="width:28px;height:2px;background:var(--green-600);border-radius:2px;"></span>Writing</span>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.4rem,5vw,4rem);font-weight:800;line-height:1.04;letter-spacing:-0.03em;color:var(--green-800);margin:20px 0 0;max-width:780px;text-wrap:balance;">Notes from the build — applied AI, written plainly.</h1>
+    <p style="font-size:var(--fs-body-lg);line-height:1.55;color:var(--text-body);max-width:600px;margin:20px 0 0;">Practical, source-backed articles on voice AI, agentic systems, MCP, automation and applied generative AI — structured to be useful to humans and discoverable by AI search.</p>
+  </section>
+
+  <!-- TOPIC CLUSTERS -->
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(20px,3vw,32px) clamp(20px,5vw,64px) clamp(36px,5vw,56px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 20px;">Browse by topic</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;">
+      <a href="article.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Voice AI</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">3 articles</div>
+      </a>
+      <a href="article-mcp-servers.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Agents &amp; MCP</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">5 articles</div>
+      </a>
+      <a href="article-ai-mvp.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Automation</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">2 articles</div>
+      </a>
+      <a href="article-rag-citations.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">RAG &amp; Retrieval</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">2 articles</div>
+      </a>
+      <a href="article-local-llms.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Local LLMs</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">1 article</div>
+      </a>
+      <a href="article-meta-prompting.html" class="cj-topic" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+        <div style="font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Prompting</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:6px;">2 articles</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURED ARTICLE -->
+  <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,5vw,64px) clamp(36px,5vw,56px);">
+    <a data-reveal href="article.html" class="ks-card ks-card--interactive cj-feature" style="display:grid;grid-template-columns:1.05fr 0.95fr;gap:0;border-radius:var(--radius-2xl);overflow:hidden;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+      <div style="padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;justify-content:center;">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--green-700);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">Featured · Voice AI</span>
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;line-height:1.12;letter-spacing:-0.02em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">Building human-like voice agents with Retell AI</h2>
+        <p style="font-size:15px;line-height:1.6;color:var(--text-body);margin:14px 0 0;"><strong style="color:var(--green-800);">TL;DR —</strong> A practical walkthrough of shipping a real-time voice agent on Retell AI: system &amp; meta prompting for natural dialogue, wiring tools through webhooks, and the latency choices that keep a conversation feeling human.</p>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:13px;color:var(--text-muted);">
+          <span>Chandrasekhar Jinendran</span><span>·</span><span>9 min read</span><span>·</span><span>Jun 2026</span>
+        </div>
+        <span style="display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-family:var(--font-display);font-weight:600;font-size:15px;color:var(--green-600);">Read article <span aria-hidden="true">&rarr;</span></span>
+      </div>
+      <div style="position:relative;min-height:300px;background:linear-gradient(150deg,#2F9655,#0B2A19);overflow:hidden;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="180" height="80" viewBox="0 0 180 80" fill="none" stroke="#EAF2EC" stroke-width="3" stroke-linecap="round">
+            <line x1="12" y1="40" x2="12" y2="40"><animate attributeName="y1" values="40;18;40" dur="1s" repeatCount="indefinite" begin="0s"/><animate attributeName="y2" values="40;62;40" dur="1s" repeatCount="indefinite" begin="0s"/></line>
+            <line x1="36" y1="40" x2="36" y2="40"><animate attributeName="y1" values="40;8;40" dur="1.1s" repeatCount="indefinite" begin="0.1s"/><animate attributeName="y2" values="40;72;40" dur="1.1s" repeatCount="indefinite" begin="0.1s"/></line>
+            <line x1="60" y1="40" x2="60" y2="40"><animate attributeName="y1" values="40;24;40" dur="0.9s" repeatCount="indefinite" begin="0.2s"/><animate attributeName="y2" values="40;56;40" dur="0.9s" repeatCount="indefinite" begin="0.2s"/></line>
+            <line x1="84" y1="40" x2="84" y2="40"><animate attributeName="y1" values="40;4;40" dur="1.2s" repeatCount="indefinite" begin="0.05s"/><animate attributeName="y2" values="40;76;40" dur="1.2s" repeatCount="indefinite" begin="0.05s"/></line>
+            <line x1="108" y1="40" x2="108" y2="40"><animate attributeName="y1" values="40;20;40" dur="1s" repeatCount="indefinite" begin="0.25s"/><animate attributeName="y2" values="40;60;40" dur="1s" repeatCount="indefinite" begin="0.25s"/></line>
+            <line x1="132" y1="40" x2="132" y2="40"><animate attributeName="y1" values="40;14;40" dur="1.05s" repeatCount="indefinite" begin="0.15s"/><animate attributeName="y2" values="40;66;40" dur="1.05s" repeatCount="indefinite" begin="0.15s"/></line>
+            <line x1="156" y1="40" x2="156" y2="40"><animate attributeName="y1" values="40;28;40" dur="0.95s" repeatCount="indefinite" begin="0.3s"/><animate attributeName="y2" values="40;52;40" dur="0.95s" repeatCount="indefinite" begin="0.3s"/></line>
+          </svg>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ARTICLE GRID -->
+  <section style="max-width:1280px;margin:0 auto;padding:0 clamp(20px,5vw,64px) clamp(56px,8vw,96px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">All articles</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;">
+
+      <a data-reveal href="article-mcp-servers.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">MCP</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">Governed MCP servers: tools Claude can't misuse</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> Policy layers, per-call caps, allowlists and audit trails that make autonomous tool use safe by construction.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>7 min</span><span>·</span><span>Jun 2026</span></div>
+      </a>
+
+      <a data-reveal href="article-ai-mvp.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">Automation</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">From idea to deployed AI MVP in a weekend</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> An n8n + Claude workflow that captures, qualifies and routes leads automatically — start to deploy.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>6 min</span><span>·</span><span>May 2026</span></div>
+      </a>
+
+      <a data-reveal href="article-rag-citations.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">RAG</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">RAG that cites its sources: FastAPI + vector search</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> How JobSignal ingests postings and answers skill queries with cited, verifiable sources.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>8 min</span><span>·</span><span>May 2026</span></div>
+      </a>
+
+      <a data-reveal href="article-ai-employees.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">Agents</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">Designing "AI employees" that work end to end</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> The architecture behind always-on agentic systems that handle real tasks without a human in the loop.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>10 min</span><span>·</span><span>Apr 2026</span></div>
+      </a>
+
+      <a data-reveal href="article-local-llms.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">Local LLMs</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">Local LLM deployment with Ollama &amp; MSTY</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> Running capable models on your own hardware — when local beats the API, and how to set it up.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>7 min</span><span>·</span><span>Apr 2026</span></div>
+      </a>
+
+      <a data-reveal href="article-meta-prompting.html" class="ks-card ks-card--interactive" style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:var(--space-6);">
+        <span style="display:inline-flex;width:fit-content;font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:6px 12px;border-radius:var(--radius-pill);">Prompting</span>
+        <h3 style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green-800);margin:16px 0 0;line-height:1.25;">System &amp; meta prompting for reliable agents</h3>
+        <p style="font-size:14px;line-height:1.55;color:var(--text-body);margin:10px 0 0;flex:1;"><strong style="color:var(--green-800);">TL;DR —</strong> The prompting patterns that make agentic behaviour predictable instead of improvised.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:13px;color:var(--text-muted);"><span>5 min</span><span>·</span><span>Mar 2026</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

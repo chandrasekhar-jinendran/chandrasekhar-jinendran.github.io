@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System &amp; meta prompting for reliable agents — Chandrasekhar Jinendran</title>
+  <meta name="description" content="Reliable agents come from separating the system prompt (who, what, boundaries) from meta prompts (how the agent reasons and uses tools).">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/article-meta-prompting.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="System & meta prompting for reliable agents">
+  <meta property="og:description" content="The prompting patterns that make agentic behaviour predictable instead of improvised.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/article-meta-prompting.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "TechArticle", "headline": "System and meta prompting for reliable agents", "description": "Reliable agents come from separating the system prompt (who, what, boundaries) from meta prompts (how the agent reasons and uses tools).", "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist", "url": "https://chandrasekharjinendran.com" }, "datePublished": "2026-03-22", "mainEntityOfPage": "https://chandrasekharjinendran.com/article-meta-prompting.html", "keywords": "prompt engineering, meta prompting, system prompt, agent reliability, tool use", "articleSection": "Prompting", "wordCount": 900 },
+    { "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "What is meta prompting?", "acceptedAnswer": { "@type": "Answer", "text": "Meta prompting is instructing a model about how to reason and behave, such as how to break down tasks, when to use tools, and how to handle uncertainty, rather than about the content of a specific answer." } },
+        { "@type": "Question", "name": "What is the difference between a system prompt and a user prompt?", "acceptedAnswer": { "@type": "Answer", "text": "A system prompt sets the agent's persistent identity, capabilities and boundaries, while a user prompt is the specific request in a given turn. The system prompt frames every turn." } },
+        { "@type": "Question", "name": "How do you test prompts?", "acceptedAnswer": { "@type": "Answer", "text": "Treat prompts like code: keep a set of representative inputs with expected behaviours, version the prompt, and re-run the cases whenever you change it so you can catch regressions." } } ] }
+  ]
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+  <div style="position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:transparent;"><div id="cj-progress" style="height:100%;width:0;background:var(--green-500);transition:width .1s linear;"></div></div>
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <a href="blog.html" class="cj-link" style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</a>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <article>
+  <header style="max-width:760px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);">
+      <a href="blog.html" style="color:var(--green-600);font-weight:600;">Blog</a><span>/</span><span>Prompting</span>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">System &amp; meta prompting for reliable agents</h1>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:14px;color:var(--text-body);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(150deg,var(--green-600),var(--green-900));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;font-size:15px;">CJ</div>
+      <div><div style="font-weight:600;color:var(--green-800);">Chandrasekhar Jinendran</div><div style="font-size:13px;color:var(--text-muted);">AI Specialist · 5 min read · Mar 22, 2026</div></div>
+    </div>
+  </header>
+
+  <div class="cj-article-grid" style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,52px) clamp(20px,5vw,32px) 0;display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:0;">
+    <aside style="position:relative;">
+      <nav class="cj-toc" style="position:sticky;top:96px;padding-right:28px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">On this page</div>
+        <a href="#two">Two layers of prompting</a>
+        <a href="#system">The system prompt</a>
+        <a href="#meta">Meta prompting</a>
+        <a href="#test">Test prompts like code</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <div>
+      <div style="background:var(--green-100);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px;">TL;DR</div>
+        <p style="font-size:16px;line-height:1.65;color:var(--ink-700);margin:0;">Agents become predictable when you separate two layers: the <strong>system prompt</strong> (who the agent is, what it can do, its boundaries) and <strong>meta prompts</strong> (how it should reason, when to use tools, how to recover). Then you <strong>test prompts like code</strong>.</p>
+      </div>
+
+      <div class="cj-prose">
+        <p>Unreliable agents usually don&rsquo;t have a model problem; they have a prompting problem. Specifically, they mix &ldquo;what to do&rdquo; and &ldquo;how to think&rdquo; into one wall of text. Separating those two layers is the single highest-leverage change you can make.</p>
+        <h2 id="two">Two layers of prompting</h2>
+        <p>Think of it as content versus process. The <strong>system prompt</strong> defines content: identity, capabilities, tone, hard limits. <strong>Meta prompting</strong> defines process: how to break down a task, when to call a tool, how to handle uncertainty. Keeping them distinct makes each easy to reason about and change.</p>
+        <h2 id="system">The system prompt</h2>
+        <p>Keep it concrete and short. Who the agent is, what it may and may not do, and exactly how it should sound. Vague system prompts produce vague agents.</p>
+        <ul>
+          <li><strong>Identity:</strong> one or two sentences of persona.</li>
+          <li><strong>Boundaries:</strong> what to refuse, and how to escalate.</li>
+          <li><strong>Style:</strong> length, format, and tone rules.</li>
+        </ul>
+        <h2 id="meta">Meta prompting</h2>
+        <p>Meta prompts shape reasoning rather than content: &ldquo;think step by step before acting,&rdquo; &ldquo;prefer a tool call over a guess,&rdquo; &ldquo;if confidence is low, ask one clarifying question.&rdquo; This is where flaky agents become dependable, because you are encoding <em>how</em> to behave under uncertainty.</p>
+        <h2 id="test">Test prompts like code</h2>
+        <p>A prompt is a behavioural contract, so version it and test it. Keep a set of representative inputs with expected behaviours, and re-run them whenever you change the prompt. When something regresses, you will know which edit caused it — instead of discovering it in production.</p>
+      </div>
+
+      <div style="background:var(--green-100);border-left:4px solid var(--green-600);border-radius:var(--radius-md);padding:var(--space-6);margin:8px 0 30px;"><p style="font-size:16px;line-height:1.7;color:var(--ink-700);margin:0;font-style:italic;">Separate what the agent is from how it thinks. The first goes in the system prompt; the second is meta prompting — and both deserve tests.</p></div>
+
+      <div style="background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-6);margin:36px 0;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--green-800);margin:0 0 14px;">Key takeaways</h2>
+        <ul style="margin:0;padding-left:20px;color:var(--ink-700);font-size:16px;line-height:1.7;">
+          <li>Mixing content and process in one prompt is the usual cause of flaky agents.</li>
+          <li>System prompts define identity, boundaries and style — keep them concrete.</li>
+          <li>Meta prompts shape reasoning, tool use and behaviour under uncertainty.</li>
+          <li>Version prompts and test them against representative cases like code.</li>
+        </ul>
+      </div>
+
+      <section id="faq" class="cj-faq" style="margin:48px 0 0;scroll-margin-top:90px;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-0.02em;color:var(--green-800);margin:0 0 18px;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is meta prompting?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Meta prompting is instructing a model about how to reason and behave — how to break down tasks, when to use tools, and how to handle uncertainty — rather than about the content of a specific answer.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is the difference between a system prompt and a user prompt?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">A system prompt sets the agent's persistent identity, capabilities and boundaries, while a user prompt is the specific request in a given turn. The system prompt frames every turn.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">How do you test prompts?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Treat prompts like code: keep a set of representative inputs with expected behaviours, version the prompt, and re-run the cases whenever you change it so you can catch regressions.</p>
+          </details>
+        </div>
+      </section>
+
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(150deg,var(--green-900),var(--green-950));border-radius:var(--radius-xl);padding:var(--space-7);margin:48px 0 0;color:var(--text-on-dark);">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;">CJ</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--font-display);font-weight:700;color:#fff;">Chandrasekhar Jinendran</div>
+          <div style="font-size:14px;color:var(--text-on-dark-muted);margin-top:4px;">I build agents, automations and AI MVPs that ship as real products.</div>
+        </div>
+        <a href="contact.html" class="ks-btn ks-btn--inverse" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--green-900);font-family:var(--font-display);font-weight:600;font-size:15px;padding:13px 24px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Work with me <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  </article>
+
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,5vw,32px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">Related in this cluster</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+      <a href="article-mcp-servers.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">MCP</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Governed MCP servers: tools Claude can't misuse</h3>
+      </a>
+      <a href="article.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Voice AI</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Building human-like voice agents with Retell AI</h3>
+      </a>
+      <a href="article-ai-employees.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Agents</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Designing "AI employees" that work end to end</h3>
+      </a>
+    </div>
+  </section>
+
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

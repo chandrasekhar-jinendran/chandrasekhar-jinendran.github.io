@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From idea to deployed AI MVP in a weekend — Chandrasekhar Jinendran</title>
+  <meta name="description" content="How to take an AI idea to a deployed product in a weekend using an n8n and Claude workflow — by ruthlessly scoping to a single outcome.">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/article-ai-mvp.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="From idea to deployed AI MVP in a weekend">
+  <meta property="og:description" content="An n8n + Claude workflow that captures, qualifies and routes leads automatically — start to deploy.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/article-ai-mvp.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "TechArticle", "headline": "From idea to deployed AI MVP in a weekend", "description": "How to take an AI idea to a deployed product in a weekend using an n8n and Claude workflow — by ruthlessly scoping to a single outcome.", "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist", "url": "https://chandrasekharjinendran.com" }, "datePublished": "2026-05-24", "mainEntityOfPage": "https://chandrasekharjinendran.com/article-ai-mvp.html", "keywords": "AI MVP, n8n, Claude, automation, lead qualification, rapid prototyping", "articleSection": "Automation", "wordCount": 950 },
+    { "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "What is n8n?", "acceptedAnswer": { "@type": "Answer", "text": "n8n is an open-source workflow automation tool. It connects apps and APIs through visual nodes and webhooks, so you can build integrations and automations with very little custom code." } },
+        { "@type": "Question", "name": "How long does it really take to build an AI MVP?", "acceptedAnswer": { "@type": "Answer", "text": "With a single, well-scoped outcome and existing tools like n8n and Claude, a working, deployed MVP can be built in a weekend. Broad scope is what turns weekends into months." } },
+        { "@type": "Question", "name": "Do you need a custom backend?", "acceptedAnswer": { "@type": "Answer", "text": "Often no. For many automations, n8n's webhooks and nodes replace a backend entirely, and you only add custom services when a specific need outgrows the no-code tools." } } ] }
+  ]
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+  <div style="position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:transparent;"><div id="cj-progress" style="height:100%;width:0;background:var(--green-500);transition:width .1s linear;"></div></div>
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <a href="blog.html" class="cj-link" style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</a>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <article>
+  <header style="max-width:760px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);">
+      <a href="blog.html" style="color:var(--green-600);font-weight:600;">Blog</a><span>/</span><span>Automation</span>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">From idea to deployed AI MVP in a weekend</h1>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:14px;color:var(--text-body);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(150deg,var(--green-600),var(--green-900));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;font-size:15px;">CJ</div>
+      <div><div style="font-weight:600;color:var(--green-800);">Chandrasekhar Jinendran</div><div style="font-size:13px;color:var(--text-muted);">AI Specialist · 6 min read · May 24, 2026</div></div>
+    </div>
+  </header>
+
+  <div class="cj-article-grid" style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,52px) clamp(20px,5vw,32px) 0;display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:0;">
+    <aside style="position:relative;">
+      <nav class="cj-toc" style="position:sticky;top:96px;padding-right:28px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">On this page</div>
+        <a href="#scope">Pick exactly one outcome</a>
+        <a href="#wire">Wire n8n + Claude</a>
+        <a href="#qualify">The qualification prompt</a>
+        <a href="#route">Route, then hand off</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <div>
+      <div style="background:var(--green-100);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px;">TL;DR</div>
+        <p style="font-size:16px;line-height:1.65;color:var(--ink-700);margin:0;">You can ship a real AI MVP in a weekend if you scope to <strong>one outcome</strong> and wire it with tools that already exist. The example here: an <strong>n8n + Claude</strong> workflow that captures, qualifies and routes inbound leads — no custom backend required.</p>
+      </div>
+
+      <div class="cj-prose">
+        <p>Most AI projects die in the gap between &ldquo;cool demo&rdquo; and &ldquo;thing people use.&rdquo; The way across that gap is not more engineering; it is <strong>brutal scoping</strong>. Pick one outcome, automate it end to end, and put it in front of a real user before the weekend is over.</p>
+        <p>Here is the workflow I reach for when speed is the whole point.</p>
+        <h2 id="scope">Pick exactly one outcome</h2>
+        <p>An MVP is not a small version of everything — it is a complete version of one thing. For lead handling, the single outcome is: <em>a new lead is captured, qualified, and routed to the right place automatically.</em> Everything else (dashboards, analytics, multi-channel) is explicitly out of scope until that one loop works.</p>
+        <h2 id="wire">Wire n8n + Claude</h2>
+        <p><strong>n8n</strong> handles the plumbing — a webhook trigger, the HTTP calls, and the routing logic — so you write almost no glue code. <strong>Claude</strong> handles the judgement: reading a messy free-text enquiry and turning it into structured fields.</p>
+        <ul>
+          <li>A form or inbox webhook fires the n8n flow.</li>
+          <li>An n8n node sends the raw enquiry to Claude with a strict output schema.</li>
+          <li>Claude returns JSON: intent, budget band, urgency, suggested owner.</li>
+        </ul>
+        <h2 id="qualify">The qualification prompt</h2>
+        <p>The prompt is the product here. Ask for a fixed JSON shape, give two or three worked examples, and tell the model to return <code>null</code> rather than guess. A model that reliably abstains on ambiguous input is worth far more than one that always answers.</p>
+        <h2 id="route">Route, then hand off</h2>
+        <p>With clean fields, routing is trivial: high-intent leads go straight to a calendar link and a Slack ping; low-intent ones get a nurturing email. The human only ever sees a qualified, structured lead with a recommended next step — which is the entire value of the MVP.</p>
+      </div>
+
+      <div style="background:var(--green-100);border-left:4px solid var(--green-600);border-radius:var(--radius-md);padding:var(--space-6);margin:8px 0 30px;"><p style="font-size:16px;line-height:1.7;color:var(--ink-700);margin:0;font-style:italic;">Scope kills MVPs more often than technology does. Ship one outcome that works completely, then earn the right to add the second.</p></div>
+
+      <div style="background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-6);margin:36px 0;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--green-800);margin:0 0 14px;">Key takeaways</h2>
+        <ul style="margin:0;padding-left:20px;color:var(--ink-700);font-size:16px;line-height:1.7;">
+          <li>An MVP is a complete version of one outcome, not a thin version of many.</li>
+          <li>Let n8n own the plumbing and Claude own the judgement.</li>
+          <li>Force structured JSON output and allow the model to abstain.</li>
+          <li>Deliver a qualified, routed result so the human starts from a decision, not a chore.</li>
+        </ul>
+      </div>
+
+      <section id="faq" class="cj-faq" style="margin:48px 0 0;scroll-margin-top:90px;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-0.02em;color:var(--green-800);margin:0 0 18px;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is n8n?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">n8n is an open-source workflow automation tool. It connects apps and APIs through visual nodes and webhooks, so you can build integrations and automations with very little custom code.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">How long does it really take to build an AI MVP?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">With a single, well-scoped outcome and existing tools like n8n and Claude, a working, deployed MVP can be built in a weekend. Broad scope is what turns weekends into months.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Do you need a custom backend?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Often no. For many automations, n8n's webhooks and nodes replace a backend entirely, and you only add custom services when a specific need outgrows the no-code tools.</p>
+          </details>
+        </div>
+      </section>
+
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(150deg,var(--green-900),var(--green-950));border-radius:var(--radius-xl);padding:var(--space-7);margin:48px 0 0;color:var(--text-on-dark);">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;">CJ</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--font-display);font-weight:700;color:#fff;">Chandrasekhar Jinendran</div>
+          <div style="font-size:14px;color:var(--text-on-dark-muted);margin-top:4px;">I build agents, automations and AI MVPs that ship as real products.</div>
+        </div>
+        <a href="contact.html" class="ks-btn ks-btn--inverse" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--green-900);font-family:var(--font-display);font-weight:600;font-size:15px;padding:13px 24px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Work with me <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  </article>
+
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,5vw,32px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">Related in this cluster</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+      <a href="article-ai-employees.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Agents</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Designing "AI employees" that work end to end</h3>
+      </a>
+      <a href="article-mcp-servers.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">MCP</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Governed MCP servers: tools Claude can't misuse</h3>
+      </a>
+      <a href="article-local-llms.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Local LLMs</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Local LLM deployment with Ollama &amp; MSTY</h3>
+      </a>
+    </div>
+  </section>
+
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

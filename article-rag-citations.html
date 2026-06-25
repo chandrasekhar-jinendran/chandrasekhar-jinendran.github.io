@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG that cites its sources: FastAPI + vector search — Chandrasekhar Jinendran</title>
+  <meta name="description" content="Build a retrieval-augmented generation pipeline that returns verifiable citations, using FastAPI and vector search with a prompt contract that forces the model to cite or abstain.">
+  <meta name="author" content="Chandrasekhar Jinendran">
+  <meta name="theme-color" content="#15452A">
+  <link rel="canonical" href="https://chandrasekharjinendran.com/article-rag-citations.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Chandrasekhar Jinendran">
+  <meta property="og:title" content="RAG that cites its sources: FastAPI + vector search">
+  <meta property="og:description" content="How JobSignal ingests postings and answers skill queries with cited, verifiable sources.">
+  <meta property="og:url" content="https://chandrasekharjinendran.com/article-rag-citations.html">
+  <meta property="og:image" content="https://chandrasekharjinendran.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "TechArticle", "headline": "RAG that cites its sources: FastAPI + vector search", "description": "Build a retrieval-augmented generation pipeline that returns verifiable citations, using FastAPI and vector search with a prompt contract that forces the model to cite or abstain.", "author": { "@type": "Person", "name": "Chandrasekhar Jinendran", "jobTitle": "AI Specialist", "url": "https://chandrasekharjinendran.com" }, "datePublished": "2026-05-10", "mainEntityOfPage": "https://chandrasekharjinendran.com/article-rag-citations.html", "keywords": "RAG, retrieval augmented generation, FastAPI, vector search, citations, embeddings", "articleSection": "RAG", "wordCount": 1050 },
+    { "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "What is RAG?", "acceptedAnswer": { "@type": "Answer", "text": "RAG (retrieval-augmented generation) retrieves relevant documents from your own data and feeds them to a language model so its answers are grounded in those sources rather than only its training data." } },
+        { "@type": "Question", "name": "How do you stop a RAG system from hallucinating citations?", "acceptedAnswer": { "@type": "Answer", "text": "Pass retrieved passages with stable IDs, instruct the model to cite only those IDs or abstain, and validate the response, rejecting any citation that references an ID you did not supply." } },
+        { "@type": "Question", "name": "Why use FastAPI for a RAG service?", "acceptedAnswer": { "@type": "Answer", "text": "FastAPI offers typed, async endpoints with low overhead, which suits the latency-sensitive embed-and-search step at the core of a retrieval pipeline." } } ] }
+  ]
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<div style="min-height:100vh;overflow-x:hidden;">
+  <div style="position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:transparent;"><div id="cj-progress" style="height:100%;width:0;background:var(--green-500);transition:width .1s linear;"></div></div>
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:rgba(232,236,228,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);">
+    <a href="index.html" style="display:inline-flex;align-items:baseline;font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></a>
+    <nav style="display:flex;align-items:center;gap:30px;">
+      <div class="cj-navlinks" style="display:flex;align-items:center;gap:30px;">
+        <a href="index.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Home</a>
+        <a href="works.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Works</a>
+        <a href="blog.html" class="cj-link" style="position:relative;font-size:15px;font-weight:600;color:var(--green-800);">Blog</a>
+        <a href="services.html" class="cj-link" style="position:relative;font-size:15px;font-weight:500;color:var(--text-body);">Services</a>
+      </div>
+      <a href="contact.html" class="ks-btn ks-btn--primary" style="display:inline-flex;align-items:center;gap:9px;background:var(--action);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Let's Talk <span aria-hidden="true">&rarr;</span></a>
+    </nav>
+  </header>
+
+  <article>
+  <header style="max-width:760px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,32px) 0;">
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);">
+      <a href="blog.html" style="color:var(--green-600);font-weight:600;">Blog</a><span>/</span><span>RAG</span>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:var(--green-800);margin:18px 0 0;text-wrap:balance;">RAG that cites its sources: FastAPI + vector search</h1>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;font-size:14px;color:var(--text-body);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(150deg,var(--green-600),var(--green-900));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;font-size:15px;">CJ</div>
+      <div><div style="font-weight:600;color:var(--green-800);">Chandrasekhar Jinendran</div><div style="font-size:13px;color:var(--text-muted);">AI Specialist · 8 min read · May 10, 2026</div></div>
+    </div>
+  </header>
+
+  <div class="cj-article-grid" style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,52px) clamp(20px,5vw,32px) 0;display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:0;">
+    <aside style="position:relative;">
+      <nav class="cj-toc" style="position:sticky;top:96px;padding-right:28px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">On this page</div>
+        <a href="#why">Why citations are the whole point</a>
+        <a href="#ingest">Ingestion and chunking</a>
+        <a href="#retrieve">Retrieval with FastAPI + vector search</a>
+        <a href="#cite">Forcing citations in the answer</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+    <div>
+      <div style="background:var(--green-100);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px;">TL;DR</div>
+        <p style="font-size:16px;line-height:1.65;color:var(--ink-700);margin:0;">A trustworthy RAG system answers <em>with receipts</em>. The recipe: <strong>FastAPI</strong> for the API, a <strong>vector store</strong> for retrieval, and a <strong>prompt contract</strong> that forces the model to cite the passages it used — or say it doesn&rsquo;t know.</p>
+      </div>
+
+      <div class="cj-prose">
+        <p>Retrieval-augmented generation is how you get a model to answer from <em>your</em> documents instead of its memory. But a RAG answer with no sources is just a confident guess. The differentiator that makes RAG usable in serious settings is <strong>citations you can click and verify</strong>.</p>
+        <h2 id="why">Why citations are the whole point</h2>
+        <p>Hallucination is not a model bug you can prompt away; it is what language models do when they lack grounding. Citations convert an answer from &ldquo;trust me&rdquo; into &ldquo;check page 4.&rdquo; They also give you a cheap, automatic quality signal: if the model can&rsquo;t cite a source, it shouldn&rsquo;t answer.</p>
+        <h2 id="ingest">Ingestion and chunking</h2>
+        <p>Quality starts before retrieval. Split documents into semantically coherent chunks — paragraphs or sections, not arbitrary character windows — and keep metadata (source, title, page) with every chunk. Embed each chunk and store it in a vector database.</p>
+        <ul>
+          <li>Chunk on natural boundaries; overlap slightly to preserve context.</li>
+          <li>Store source metadata alongside each vector so citations are exact.</li>
+          <li>Re-embed when documents change; stale vectors cite stale facts.</li>
+        </ul>
+        <h2 id="retrieve">Retrieval with FastAPI + vector search</h2>
+        <p><strong>FastAPI</strong> gives you a typed, async endpoint that takes a question, embeds it, runs a <strong>vector similarity search</strong>, and returns the top passages with their metadata. Keep this layer thin and fast — retrieval latency is felt directly by the user.</p>
+        <p>Return more candidates than you need and let a lightweight re-rank pick the best few before they reach the model.</p>
+        <h2 id="cite">Forcing citations in the answer</h2>
+        <p>This is the part most pipelines skip. Pass the retrieved passages with stable IDs, and make the prompt contract explicit: <em>answer only from these passages, attach the ID of every passage you use, and if the answer isn&rsquo;t supported, say so.</em> Then validate — if the response cites an ID you didn&rsquo;t supply, reject it.</p>
+      </div>
+
+      <div style="background:var(--green-100);border-left:4px solid var(--green-600);border-radius:var(--radius-md);padding:var(--space-6);margin:8px 0 30px;"><p style="font-size:16px;line-height:1.7;color:var(--ink-700);margin:0;font-style:italic;">If the retrieved passages don&rsquo;t support an answer, the correct output is &ldquo;I don&rsquo;t know&rdquo; — not a fluent paragraph. Abstention is a feature.</p></div>
+
+      <div style="background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-6);margin:36px 0;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--green-800);margin:0 0 14px;">Key takeaways</h2>
+        <ul style="margin:0;padding-left:20px;color:var(--ink-700);font-size:16px;line-height:1.7;">
+          <li>A RAG answer without sources is an unverifiable guess.</li>
+          <li>Chunk on natural boundaries and keep source metadata on every vector.</li>
+          <li>Use FastAPI for a thin, async retrieval layer over vector search.</li>
+          <li>Force the model to cite supplied passage IDs or abstain, then validate the citations.</li>
+        </ul>
+      </div>
+
+      <section id="faq" class="cj-faq" style="margin:48px 0 0;scroll-margin-top:90px;">
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-0.02em;color:var(--green-800);margin:0 0 18px;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">What is RAG?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">RAG (retrieval-augmented generation) retrieves relevant documents from your own data and feeds them to a language model so its answers are grounded in those sources rather than only its training data.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">How do you stop a RAG system from hallucinating citations?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">Pass retrieved passages with stable IDs, instruct the model to cite only those IDs or abstain, and validate the response — rejecting any citation that references an ID you did not supply.</p>
+          </details>
+          <details style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;">
+            <summary style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--green-800);">Why use FastAPI for a RAG service?<span class="cj-plus" style="color:var(--green-600);font-size:22px;transition:transform .2s;">+</span></summary>
+            <p style="font-size:15px;line-height:1.65;color:var(--ink-700);margin:12px 0 0;">FastAPI offers typed, async endpoints with low overhead, which suits the latency-sensitive embed-and-search step at the core of a retrieval pipeline.</p>
+          </details>
+        </div>
+      </section>
+
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(150deg,var(--green-900),var(--green-950));border-radius:var(--radius-xl);padding:var(--space-7);margin:48px 0 0;color:var(--text-on-dark);">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:800;">CJ</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--font-display);font-weight:700;color:#fff;">Chandrasekhar Jinendran</div>
+          <div style="font-size:14px;color:var(--text-on-dark-muted);margin-top:4px;">I build agents, automations and AI MVPs that ship as real products.</div>
+        </div>
+        <a href="contact.html" class="ks-btn ks-btn--inverse" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--green-900);font-family:var(--font-display);font-weight:600;font-size:15px;padding:13px 24px;border-radius:var(--radius-pill);border:1.5px solid transparent;">Work with me <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  </article>
+
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(20px,5vw,32px);">
+    <h2 style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 24px;">Related in this cluster</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;">
+      <a href="article-mcp-servers.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">MCP</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Governed MCP servers: tools Claude can't misuse</h3>
+      </a>
+      <a href="article-meta-prompting.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Prompting</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">System &amp; meta prompting for reliable agents</h3>
+      </a>
+      <a href="article-local-llms.html" class="ks-card ks-card--interactive" style="display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:var(--space-5);">
+        <span style="font-size:12px;font-weight:700;color:var(--green-800);background:var(--green-100);padding:5px 11px;border-radius:var(--radius-pill);">Local LLMs</span>
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green-800);margin:14px 0 0;line-height:1.3;">Local LLM deployment with Ollama &amp; MSTY</h3>
+      </a>
+    </div>
+  </section>
+
+  <footer style="background:var(--sage-200);border-top:1px solid var(--border);">
+    <div class="cj-footer-grid" style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px);display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;">
+      <div>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-0.03em;color:var(--green-800);">CJ<span style="color:var(--green-500);">.</span></span>
+        <p style="font-size:14px;line-height:1.6;color:var(--text-body);margin:14px 0 0;max-width:300px;">Chandrasekhar Jinendran — AI Specialist building agents, automations and voice AI that ship as real products.</p>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Explore</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="works.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Works</a>
+          <a href="blog.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Blog</a>
+          <a href="index.html#about" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">About</a>
+          <a href="services.html" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Services</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">Connect</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+          <a href="mailto:chandrasekharjinendran@gmail.com" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">Email</a>
+          <a href="https://www.linkedin.com/in/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">LinkedIn</a>
+          <a href="https://github.com/chandrasekhar-jinendran" target="_blank" rel="noopener" class="cj-link" style="position:relative;width:fit-content;color:var(--text-body);">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:20px clamp(20px,5vw,64px);font-size:13px;color:var(--text-muted);">© 2026 Chandrasekhar Jinendran. Built with care.</div>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>
